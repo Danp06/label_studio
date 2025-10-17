@@ -8,7 +8,11 @@ Sistema de etiquetado NER para descripciones de menú usando Label Studio con im
 - [Instalación](#instalación)
 - [Uso](#uso)
 - [Configuración del Proyecto](#configuración-del-proyecto)
+- [Gestión de Backups](#gestión-de-backups)
 - [Exportar Resultados](#exportar-resultados)
+- [Invitar Anotadores](#invitar-anotadores)
+- [Comandos Útiles](#comandos-útiles)
+- [Solución de Problemas](#solución-de-problemas)
 
 ---
 
@@ -28,8 +32,7 @@ Sistema de etiquetado NER para descripciones de menú usando Label Studio con im
 
 ```bash
 # Estructura de carpetas
-mkdir -p data/raw data/process exports
-
+mkdir -p data/raw data/process exports scripts backups
 ```
 
 ### 1.b (Opcional) Crear y activar entorno virtual
@@ -56,7 +59,7 @@ Nota: estas dependencias se usan principalmente para los scripts de preparación
 
 ### 2. Preparar el CSV (OPCIONAL)
 
-Si tu CSV tiene muchos registros, debes limitarlos
+Si tu CSV tiene muchos registros, debes limitarlos.
 
 ### 2.b Configurar variables de entorno (.env)
 
@@ -64,8 +67,8 @@ Crea un archivo `.env` en la raíz del proyecto con:
 
 ```bash
 LABEL_STUDIO_PORT=8080
-LABEL_STUDIO_ADMIN_USERNAME=
-LABEL_STUDIO_ADMIN_PASSWORD=
+LABEL_STUDIO_ADMIN_USERNAME=admin@example.com
+LABEL_STUDIO_ADMIN_PASSWORD=tu_contraseña_segura
 ```
 
 ### 3. Iniciar Label Studio
@@ -81,8 +84,8 @@ http://localhost:8080
 ```
 
 **Credenciales:**
-- Email: `admin@xxxxx.com`
-- Password: `xxxxxxxxxx`
+- Email: (la que configuraste en `.env`)
+- Password: (la que configuraste en `.env`)
 
 ---
 
@@ -91,7 +94,7 @@ http://localhost:8080
 ### PASO 1: Crear Proyecto
 
 1. Click en **"Create Project"**
-2. Nombre: `Etiquetado Menu Cluvi`
+2. Nombre: `Etiquetado Menu`
 3. Click **"Save"**
 
 ### PASO 2: Importar CSV
@@ -101,7 +104,7 @@ http://localhost:8080
 3. Selecciona tu archivo preparado: `data/process/cluvi_preprocessed_sampled.csv` (o `data/process/cluvi_preprocessed_sampled.json`)
 4. Click **"Import"**
 
-⚠️ **Importante:** Si el CSV tiene separador `;`, Label Studio puede tener problemas. 
+⚠️ **Importante:** Si el CSV tiene separador `;`, Label Studio puede tener problemas. Asegúrate de usar comas (`,`).
 
 ### PASO 3: Configurar Interfaz de Etiquetado
 
@@ -183,7 +186,6 @@ http://localhost:8080
   <!-- Attributes for INGREDIENTE -->
   <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="INGREDIENTE" className="attributes-box">
     <Header value="⚙️ Atributos para INGREDIENTE:" className="header-sub"/>
-    <!-- Cooking Method -->
     <Header value="Método de Cocción" size="5" className="header-sub"/>
     <Choices name="cooking_method" toName="text" perRegion="true" choice="multiple" showInline="true">
       <Choice value="Asado"/>
@@ -198,7 +200,6 @@ http://localhost:8080
       <Choice value="Salteado"/>
       <Choice value="No Aplica"/>
     </Choices>
-    <!-- Preparation State -->
     <Header value="Estado de Preparación" size="5" className="header-sub"/>
     <Choices name="preparation_state" toName="text" perRegion="true" choice="single" showInline="true">
       <Choice value="Crudo"/>
@@ -233,7 +234,6 @@ http://localhost:8080
   <Collapse accordion="true">
     <Panel value="📋 Metadatos del Menú">
       <View style="padding: 15px;">
-        <!-- Origin Cuisine -->
         <Header value="Cocina de Origen" size="5" className="header-sub"/>
         <Choices name="origin_cuisine" toName="text" choice="multiple" showInline="true" required="true">
           <Choice value="Italiana"/>
@@ -249,11 +249,8 @@ http://localhost:8080
           <Choice value="Otra"/>
         </Choices>
         <View className="tip">
-          <Header value="💡 Consejo: Identifica el tipo de menú revisando platos e ingredientes (ej. 'Pasta' sugiere Italiana). Selecciona múltiples si es fusión, o 'Otra' para cocinas no listadas y describe si es posible." size="5"/>
-          <Header value="💡 Usa 'Fusión' para menús que combinan estilos, como mexicano-japonés." size="5"/>
+          <Header value="💡 Consejo: Identifica el tipo de menú revisando platos e ingredientes (ej. 'Pasta' sugiere Italiana). Selecciona múltiples si es fusión, o 'Otra' para cocinas no listadas." size="5"/>
         </View>
-
-        <!-- Menu Language -->
         <Header value="Idioma del Menú" size="5" className="header-sub"/>
         <Choices name="language" toName="text" choice="single" showInline="true" required="true">
           <Choice value="Español"/>
@@ -275,6 +272,54 @@ http://localhost:8080
 ```
 
 3. Click **"Save"**
+
+---
+
+## 💾 Gestión de Backups
+
+### Backups Automáticos
+
+Los backups se ejecutan automáticamente **3 veces al día** (6 AM, 2 PM, 10 PM) y se guardan en la carpeta `./backups/`.
+
+### Ejecutar Backup Manual
+
+```bash
+./scripts/backup.sh
+```
+
+Este comando realiza un backup inmediato sin detener los servicios.
+
+### Restaurar desde Backup
+
+```bash
+./scripts/restore.sh
+```
+
+Este script te permite:
+1. Ver todos los backups disponibles
+2. Elegir el más reciente o seleccionar uno específico
+3. Restaurar los datos (con confirmación de seguridad)
+4. Reiniciar automáticamente los servicios
+
+**Flujo:**
+- Detiene los contenedores
+- Elimina el volumen actual
+- Restaura los datos del backup
+- Reinicia los servicios
+
+⚠️ **Advertencia:** La restauración elimina todos los datos actuales. Asegúrate de seleccionar el backup correcto.
+
+### Ubicación de Backups
+
+```
+./backups/
+├── label-studio-backup-20240115_060000.tar.gz
+├── label-studio-backup-20240115_140000.tar.gz
+├── label-studio-backup-20240115_220000.tar.gz
+└── backup.log
+```
+
+Los backups se conservan durante 30 días y se limpian automáticamente después.
 
 ---
 
@@ -303,25 +348,36 @@ Los resultados incluirán:
 4. Rol: **"Annotator"** (solo etiquetan, NO configuran)
 5. Click **"Send Invitation"**
 
+**Notas:**
+- Solo Admins pueden crear proyectos y eliminar datos
+- Los Annotators solo pueden etiquetar
+- La invitación se envía por correo
+
 ---
 
 ## 🔧 Comandos Útiles
 
 ```bash
 # Ver logs de Label Studio
-docker-compose logs -f
+docker-compose logs -f labelstudio
+
+# Ver logs del servicio de backup
+docker-compose logs -f backup
+
+# Ver estado de todos los servicios
+docker-compose ps
 
 # Reiniciar Label Studio
-docker-compose restart
+docker-compose restart labelstudio
 
-# Detener todo
+# Detener todo sin eliminar datos
 docker-compose down
 
 # Detener y eliminar datos (⚠️ cuidado)
 docker-compose down -v
 
-# Ver estado
-docker-compose ps
+# Limpiar contenedores huérfanos
+docker-compose down --remove-orphans
 ```
 
 ---
@@ -332,12 +388,16 @@ docker-compose ps
 .
 ├── docker-compose.yml              # Configuración Docker
 ├── .env                            # Variables de entorno (crear)
+├── scripts/
+│   ├── backup.sh                   # Script de backup manual
+│   └── restore.sh                  # Script de restauración
+├── backups/                        # Backups automáticos (creado automáticamente)
 ├── data/
 │   ├── raw/                        # Datos fuente (entrada)
 │   │   ├── cluvi_preprocessed.csv
 │   │   ├── cluvi_preprocessed.json
 │   │   └── cluvi_preprocessed.parquet
-│   └── process/                    # Datos preparados para LS
+│   └── process/                    # Datos preparados para Label Studio
 │       ├── cluvi_preprocessed_sampled.csv
 │       ├── cluvi_preprocessed_sampled.json
 │       └── cluvi_preprocessed_sampled.parquet
@@ -351,7 +411,7 @@ docker-compose ps
 
 ### Separador de CSV
 
-Label Studio espera CSVs con **coma (`,`)** como separador. 
+Label Studio espera CSVs con **coma (`,`)** como separador. Si tu archivo usa punto y coma (`;`), conviértelo primero.
 
 ### Columnas para etiquetar
 
@@ -363,6 +423,46 @@ Asegúrate de que tu CSV tenga las siguientes columnas:
 
 El sistema combinará automáticamente estas columnas en un solo texto para etiquetar. Si tus columnas tienen otros nombres, ajusta las referencias `$label`, `$description`, `$category`, y `$main_category` en la configuración XML.
 
+---
+
+## 🚨 Solución de Problemas
+
+### Label Studio no inicia
+
+```bash
+docker-compose logs -f labelstudio
+```
+
+Revisa si hay errores en los logs. Problema común: puerto 8080 en uso.
+
+### Página en blanco
+
+- Limpia la caché del navegador (Ctrl+Shift+Del)
+- Accede directamente a: `http://localhost:8080/user/login/`
+- Reinicia el contenedor: `docker-compose restart`
+
+### Advertencia de contenedores huérfanos
+
+```
+WARNING: Found orphan containers (label-studio-db)
+```
+
+Ejecuta:
+```bash
+docker-compose down --remove-orphans
+docker-compose up -d
+```
+
+Esto sucede cuando eliminas servicios del `docker-compose.yml` pero sus contenedores siguen existiendo.
+
+### Problemas con permisos en backups
+
+Si ves errores de permisos al restaurar, asegúrate de que los scripts sean ejecutables:
+
+```bash
+chmod +x scripts/backup.sh
+chmod +x scripts/restore.sh
+```
 
 ---
 
@@ -371,22 +471,7 @@ El sistema combinará automáticamente estas columnas en un solo texto para etiq
 - [Documentación Label Studio](https://labelstud.io/guide/)
 - [Label Studio API](https://labelstud.io/api/)
 - [Guía de Etiquetado NER](https://labelstud.io/templates/named_entity.html)
-
----
-
-## 🆘 Solución de Problemas
-
-### Label Studio no inicia
-
-```bash
-docker-compose logs -f labelstudio
-```
-
-### Página en blanco
-
-- Limpia la caché del navegador
-- Accede directamente a: `http://localhost:8080/user/login/`
-- Reinicia el contenedor: `docker-compose restart`
+- [Docker Compose Documentation](https://docs.docker.com/compose/)
 
 ---
 
@@ -396,3 +481,4 @@ Para problemas o dudas:
 1. Revisa los logs: `docker-compose logs -f`
 2. Consulta la documentación oficial
 3. Verifica que todos los archivos estén en su lugar
+4. Asegúrate de que los permisos de los scripts sean correctos

@@ -21,6 +21,20 @@ services:
     networks:
       - labelstudio-network
 
+  backup:
+    image: alpine:latest
+    container_name: label-studio-backup
+    environment:
+      - TZ=America/Bogota # Establece la zona horaria a Colombia para que el cron se ejecute en hora local.
+    volumes:
+      - label_studio_data:/data
+      - ./backups:/backups
+      - ./scripts/backup.sh:/app/backup.sh
+    restart: unless-stopped
+    networks:
+      - labelstudio-network
+    entrypoint: sh -c "echo '0 6,14,22 * * * /app/backup.sh' | crontab - && crond -f"
+
 volumes:
   label_studio_data:
     driver: local
