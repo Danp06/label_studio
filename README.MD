@@ -284,7 +284,7 @@ Los backups se ejecutan automáticamente **3 veces al día** (6 AM, 2 PM, 10 PM)
 ### Ejecutar Backup Manual
 
 ```bash
-./scripts/backup.sh
+docker exec label-studio-backup /app/backup.sh
 ```
 
 Este comando realiza un backup inmediato sin detener los servicios.

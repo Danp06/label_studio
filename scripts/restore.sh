@@ -7,44 +7,74 @@ echo "║  Restaurar Backup - Label Studio      ║"
 echo "╚════════════════════════════════════════╝"
 echo ""
 
-# Listar backups disponibles
-echo "📦 Backups disponibles:"
-echo ""
-ls -lh $BACKUP_DIR/label-studio-backup-*.tar.gz 2>/dev/null | awk '{print $9, "(" $5 ")"}' | nl
+# Function to list backups
+list_backups() {
+  echo "📦 Backups disponibles:"
+  BACKUP_COUNT=$(ls -1 "$BACKUP_DIR"/label-studio-backup-*.tar.gz 2>/dev/null | wc -l)
 
-if [ $(ls -1 $BACKUP_DIR/label-studio-backup-*.tar.gz 2>/dev/null | wc -l) -eq 0 ]; then
-  echo "❌ No hay backups disponibles en $BACKUP_DIR"
-  exit 1
-fi
-
-echo ""
-echo "¿Cuál backup quieres restaurar?"
-echo "1) El más reciente (recomendado)"
-echo "2) Seleccionar uno específico"
-echo ""
-read -p "Opción (1 o 2): " option
-
-if [ "$option" == "1" ]; then
-  BACKUP_FILE=$(ls -t $BACKUP_DIR/label-studio-backup-*.tar.gz | head -1)
-  echo ""
-  echo "✓ Restaurando: $(basename $BACKUP_FILE)"
-elif [ "$option" == "2" ]; then
-  echo ""
-  read -p "Nombre del backup (ej: label-studio-backup-20240115_140000.tar.gz): " backup_name
-  BACKUP_FILE="$BACKUP_DIR/$backup_name"
-  
-  if [ ! -f "$BACKUP_FILE" ]; then
-    echo "❌ Backup no encontrado: $BACKUP_FILE"
-    exit 1
+  if [ "$BACKUP_COUNT" -eq 0 ]; then
+    echo "❌ No hay backups disponibles en $BACKUP_DIR"
+    return 1 # Indicate no backups
+  else
+    echo ""
+    ls -lh "$BACKUP_DIR"/label-studio-backup-*.tar.gz 2>/dev/null | awk '{print $9, "(" $5 ")"}' | nl
+    echo ""
+    return 0 # Indicate backups found
   fi
-else
-  echo "❌ Opción inválida"
-  exit 1
+}
+
+# Initial listing of backups
+if ! list_backups; then
+  exit 1 # Exit if no backups found initially
 fi
+
+BACKUP_FILE="" # Initialize BACKUP_FILE
+
+while true; do
+  echo "¿Qué acción deseas realizar?"
+  echo "1) Restaurar el backup más reciente (recomendado)"
+  echo "2) Restaurar un backup específico"
+  echo "3) Listar backups disponibles"
+  echo "4) Salir"
+  echo ""
+  read -p "Opción (1, 2, 3 o 4): " option
+
+  case "$option" in
+    1)
+      BACKUP_FILE=$(ls -t "$BACKUP_DIR"/label-studio-backup-*.tar.gz | head -1)
+      echo ""
+      echo "✓ Restaurando: $(basename "$BACKUP_FILE")"
+      break # Exit loop to proceed with restoration
+      ;;
+    2)
+      echo ""
+      read -p "Nombre del backup (ej: label-studio-backup-20240115_140000.tar.gz): " backup_name
+      BACKUP_FILE="$BACKUP_DIR/$backup_name"
+      
+      if [ ! -f "$BACKUP_FILE" ]; then
+        echo "❌ Backup no encontrado: $BACKUP_FILE"
+        continue # Stay in loop to choose again
+      fi
+      break # Exit loop to proceed with restoration
+      ;;
+    3)
+      echo ""
+      list_backups
+      ;;
+    4)
+      echo "❌ Operación cancelada. Saliendo."
+      exit 0
+      ;;
+    *)
+      echo "❌ Opción inválida. Por favor, elige 1, 2, 3 o 4."
+      ;;
+  esac
+  echo ""
+done
 
 echo ""
 echo "⚠️  ADVERTENCIA: Esto eliminará todos los datos actuales"
-echo "📁 Backup a restaurar: $(basename $BACKUP_FILE)"
+echo "📁 Backup a restaurar: $(basename "$BACKUP_FILE")"
 echo ""
 read -p "¿Estás seguro? (escribe 'si' para continuar): " confirm
 
@@ -66,8 +96,8 @@ docker volume create label_studio_data
 echo "📥 Restaurando backup..."
 docker run --rm \
   -v label_studio_data:/data \
-  -v $(pwd)/backups:/backups \
-  alpine tar xzf /backups/$(basename $BACKUP_FILE) -C /
+  -v "$(pwd)"/backups:/backups \
+  alpine tar xzf /backups/"$(basename "$BACKUP_FILE")" -C /
 
 if [ $? -eq 0 ]; then
   echo "✅ Backup restaurado exitosamente"
