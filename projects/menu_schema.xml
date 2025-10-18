@@ -1,0 +1,157 @@
+<View>
+  <Style>
+    .header-main { color: #4CAF50; font-weight: bold; font-size: 1.5em; margin-bottom: 10px; }
+    .header-step { color: #2196F3; font-weight: bold; font-size: 1.2em; margin: 20px 0 10px; }
+    .header-sub { color: #333; font-weight: bold; font-size: 1.1em; margin-top: 15px; }
+    .tip { color: #666; font-style: italic; font-size: 0.9em; padding: 10px; background: #f5f5f5; border-radius: 4px; margin: 10px 0; }
+    .success { color: #4CAF50; font-weight: bold; text-align: center; padding: 15px; background: #e8f5e9; border-radius: 8px; margin: 20px 0; }
+    .attributes-box { background: #f9f9f9; padding: 15px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #2196F3; }
+  </Style>
+
+  <!-- Main Header -->
+  <Header value="¡Bienvenido/a a Anotar Menús! 🍽️" className="header-main"/>
+  <Header value="Etiqueta platos, bebidas y más. Sigue los pasos, ¡es súper fácil! 😊" size="4" style="color: #666;"/>
+
+  <!-- Step 1: Review Menu -->
+  <Header value="Paso 1: Revisa el Menú" className="header-step"/>
+  <View className="tip">
+    <Header value="💡 Consejo: Selecciona solo las palabras exactas que representen la entidad completa (ej. 'Pizza Margherita' como PLATO, no solo 'Pizza'). Evita solapamientos y asegúrate de que cada entidad sea independiente." size="5"/>
+  </View>
+  <View style="display: flex; flex-direction: column; gap: 10px;">
+    <Text name="text" value="Título: $label&#10;Descripción: $description&#10;Categoría: $category&#10;Categoría Principal: $main_category" granularity="word"/>
+    <Labels name="entities" toName="text" smart="true" showInline="true">
+      <Label value="INGREDIENTE" background="#FFB6B6"/>
+      <Label value="PLATO" background="#B2DFDB"/>
+      <Label value="BEBIDA" background="#BBDEFB"/>
+      <Label value="MARCA" background="#FFE0B2"/>
+    </Labels>
+  </View>
+
+  <!-- Step 2: Add Attributes to Entities -->
+  <Header value="Paso 2: Agrega Atributos a las Entidades" className="header-step"/>
+
+  <!-- Attributes for PLATO -->
+  <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="PLATO" className="attributes-box">
+    <Header value="⚙️ Atributos para PLATO:" className="header-sub"/>
+    <Header value="Tipo de Plato" size="5" className="header-sub"/>
+    <Choices name="course_type" toName="text" perRegion="true" choice="single" showInline="true">
+      <Choice value="Entrante"/>
+      <Choice value="Plato Principal"/>
+      <Choice value="Acompañamiento"/>
+      <Choice value="Postre"/>
+    </Choices>
+    <View className="tip">
+      <Header value="💡 Consejo: Basado en el contexto del menú, elige el tipo que mejor encaje. Por ejemplo, usa 'Entrante' para aperitivos ligeros y 'Plato Principal' para platos fuertes." size="5"/>
+    </View>
+  </View>
+
+  <!-- Attributes for BEBIDA -->
+  <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="BEBIDA" className="attributes-box">
+    <Header value="⚙️ Atributos para BEBIDA:" className="header-sub"/>
+    <Header value="Tipo de Bebida" size="5" className="header-sub"/>
+    <Choices name="beverage_type" toName="text" perRegion="true" choice="single" showInline="true">
+      <Choice value="Alcohólica"/>
+      <Choice value="No Alcohólica"/>
+    </Choices>
+    <Header value="Categoría de Bebida" size="5" className="header-sub"/>
+    <Choices name="beverage_category" toName="text" perRegion="true" choice="single" showInline="true">
+      <Choice value="Destilados"/>
+      <Choice value="Vinos"/>
+      <Choice value="Cervezas"/>
+      <Choice value="Cócteles"/>
+      <Choice value="Gaseosas"/>
+      <Choice value="Jugos y Bebidas Naturales"/>
+      <Choice value="Café o Té"/>
+      <Choice value="Otro"/>
+    </Choices>
+    <View className="tip">
+      <Header value="💡 Consejo: Usa 'Tipo de Bebida' para clasificar si es alcohólica o no (ej. 'Cerveza' → Alcohólica). Para 'Categoría', elige la más específica: 'Gaseosas' para bebidas carbonatadas comerciales (ej. 'Coca-Cola'), 'Jugos y Bebidas Naturales' para jugos frescos o smoothies (ej. 'Jugo de naranja'), 'Café o Té' para infusiones (ej. 'Capuchino'). Usa 'Otro' para casos como agua pura." size="5"/>
+    </View>
+  </View>
+
+  <!-- Attributes for INGREDIENTE -->
+  <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="INGREDIENTE" className="attributes-box">
+    <Header value="⚙️ Atributos para INGREDIENTE:" className="header-sub"/>
+    <Header value="Método de Cocción" size="5" className="header-sub"/>
+    <Choices name="cooking_method" toName="text" perRegion="true" choice="multiple" showInline="true">
+      <Choice value="Asado"/>
+      <Choice value="Frito"/>
+      <Choice value="Hervido"/>
+      <Choice value="Crudo"/>
+      <Choice value="Horneado"/>
+      <Choice value="Al Vapor"/>
+      <Choice value="Ahumado"/>
+      <Choice value="Tostado"/>
+      <Choice value="A la Plancha"/>
+      <Choice value="Salteado"/>
+      <Choice value="No Aplica"/>
+    </Choices>
+    <Header value="Estado de Preparación" size="5" className="header-sub"/>
+    <Choices name="preparation_state" toName="text" perRegion="true" choice="single" showInline="true">
+      <Choice value="Crudo"/>
+      <Choice value="Cocido"/>
+      <Choice value="Procesado"/>
+      <Choice value="Mezclado"/>
+      <Choice value="Fresco"/>
+      <Choice value="Congelado"/>
+      <Choice value="No Aplica"/>
+    </Choices>
+    <View className="tip">
+      <Header value="💡 Consejo: Para ingredientes como 'tomate fresco', elige 'Fresco' en Estado y 'Crudo' en Método si no se cocina. Selecciona múltiples métodos si aplica (ej. 'Frito' y 'Ahumado'). Usa 'No Aplica' para estados únicos." size="5"/>
+    </View>
+  </View>
+
+  <!-- Attributes for MARCA -->
+  <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="MARCA" className="attributes-box">
+    <Header value="⚙️ Atributos para MARCA:" className="header-sub"/>
+    <Header value="Tipo de Marca" size="5" className="header-sub"/>
+    <Choices name="brand_type" toName="text" perRegion="true" choice="single" showInline="true">
+      <Choice value="Marca de Comida"/>
+      <Choice value="Marca de Bebida"/>
+      <Choice value="Marca de Producto"/>
+    </Choices>
+    <View className="tip">
+      <Header value="💡 Consejo: Elige 'Marca de Comida' para marcas como 'Nestlé' en alimentos, 'Marca de Bebida' para 'Coca-Cola'. Usa 'Marca de Producto' para marcas no estándar y describe su categoría." size="5"/>
+    </View>
+  </View>
+
+  <!-- Step 3: Complete Metadata -->
+  <Header value="Paso 3: Completa los Metadatos" className="header-step"/>
+  <Collapse accordion="true">
+    <Panel value="📋 Metadatos del Menú">
+      <View style="padding: 15px;">
+        <Header value="Cocina de Origen" size="5" className="header-sub"/>
+        <Choices name="origin_cuisine" toName="text" choice="multiple" showInline="true" required="true">
+          <Choice value="Italiana"/>
+          <Choice value="Peruana"/>
+          <Choice value="Japonesa"/>
+          <Choice value="Colombiana"/>
+          <Choice value="Mexicana"/>
+          <Choice value="Brasileña"/>
+          <Choice value="Argentina"/>
+          <Choice value="Española"/>
+          <Choice value="Asiática"/>
+          <Choice value="Fusión"/>
+          <Choice value="Otra"/>
+        </Choices>
+        <View className="tip">
+          <Header value="💡 Consejo: Identifica el tipo de menú revisando platos e ingredientes (ej. 'Pasta' sugiere Italiana). Selecciona múltiples si es fusión, o 'Otra' para cocinas no listadas." size="5"/>
+        </View>
+        <Header value="Idioma del Menú" size="5" className="header-sub"/>
+        <Choices name="language" toName="text" choice="single" showInline="true" required="true">
+          <Choice value="Español"/>
+          <Choice value="Inglés"/>
+          <Choice value="Portugués"/>
+          <Choice value="Francés"/>
+          <Choice value="Italiano"/>
+          <Choice value="Otro"/>
+        </Choices>
+      </View>
+    </Panel>
+  </Collapse>
+
+  <!-- Final Message -->
+  <View className="success">
+    <Header value="✨ ¡Último paso! Revisa que todas las entidades tengan atributos correctos y consistentes. ¡Lo hiciste genial! ✨" size="4"/>
+  </View>
+</View>

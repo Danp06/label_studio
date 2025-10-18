@@ -1,0 +1,3 @@
+{
+    "Etiquetado Menu": {"schema":"menu_schema.xml","data_source":"process/cluvi_preprocessed_sampled.json"}
+}
