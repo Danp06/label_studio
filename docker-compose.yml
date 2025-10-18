@@ -4,6 +4,7 @@ services:
   labelstudio:
     image: heartexlabs/label-studio:latest
     container_name: label-studio
+    user: root
     environment:
       LABEL_STUDIO_USERNAME: ${LABEL_STUDIO_ADMIN_USERNAME}
       LABEL_STUDIO_PASSWORD: ${LABEL_STUDIO_ADMIN_PASSWORD}
@@ -11,15 +12,54 @@ services:
       LOCAL_FILES_SERVING_ENABLED: "true"
       LABEL_STUDIO_LOCAL_FILES_SERVING_ENABLED: "true"
       LABEL_STUDIO_LOCAL_FILES_DOCUMENT_ROOT: "/data"
+      TZ: America/Bogota
     ports:
       - "0.0.0.0:${LABEL_STUDIO_PORT}:8080"
     volumes:
       - label_studio_data:/label-studio/data
       - ./data:/data
       - ./exports:/exports
+      - ./scripts:/scripts
+      - ./projects:/projects
+      - ./.env:/.env
+    command: |
+      sh -c "apt-get update && apt-get install -y cron &&
+      pip install python-dotenv requests &&
+      echo '0 6,14,22 * * * /scripts/export_annotations.sh' > /tmp/crontab_labelstudio &&
+      crontab /tmp/crontab_labelstudio &&
+      service cron start &&
+      echo 'Iniciando Label Studio...' &&
+      label-studio start &
+      echo 'Esperando que Label Studio este listo...' &&
+      sleep 30 &&
+      echo 'Ejecutando script de creacion de proyectos...' &&
+      python3 /scripts/create_project.py || echo 'Script de creacion completado' &&
+      wait"
     restart: unless-stopped
     networks:
       - labelstudio-network
+
+  backup:
+    image: heartexlabs/label-studio:latest
+    container_name: label-studio-backup
+    user: root
+    environment:
+      - TZ=America/Bogota
+    volumes:
+      - label_studio_data:/data
+      - ./backups:/backups
+      - ./scripts/backup.sh:/backup.sh
+      - ./.env:/.env
+    restart: unless-stopped
+    networks:
+      - labelstudio-network
+    command: |
+      sh -c "apt-get update && apt-get install -y cron &&
+      pip install python-dotenv requests &&
+      echo '0 6,14,22 * * * /backup.sh' > /tmp/crontab_backup &&
+      crontab /tmp/crontab_backup &&
+      service cron start &&
+      tail -f /dev/null"
 
 volumes:
   label_studio_data:
