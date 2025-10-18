@@ -1,17 +1,21 @@
 # 🏷️ Sistema de Etiquetado Menu Cluvi - Label Studio
 
-Sistema de etiquetado NER para descripciones de menú usando Label Studio con importación de CSV.
+Sistema completo de etiquetado NER para descripciones de menú usando Label Studio con automatización de proyectos, gestión de backups y exportación de datos.
 
 ## 📋 Contenido
 
 - [Requisitos](#requisitos)
 - [Instalación](#instalación)
+- [Configuración de Variables de Entorno](#configuración-de-variables-de-entorno)
 - [Uso](#uso)
-- [Configuración del Proyecto](#configuración-del-proyecto)
+- [Gestión Automática de Proyectos](#gestión-automática-de-proyectos)
+- [Scripts de Automatización](#scripts-de-automatización)
 - [Gestión de Backups](#gestión-de-backups)
 - [Exportar Resultados](#exportar-resultados)
+- [API y Autenticación](#api-y-autenticación)
 - [Invitar Anotadores](#invitar-anotadores)
 - [Comandos Útiles](#comandos-útiles)
+- [Estructura del Proyecto](#estructura-del-proyecto)
 - [Solución de Problemas](#solución-de-problemas)
 
 ---
@@ -63,13 +67,30 @@ Si tu CSV tiene muchos registros, debes limitarlos.
 
 ### 2.b Configurar variables de entorno (.env)
 
-Crea un archivo `.env` en la raíz del proyecto con:
+Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
 
 ```bash
+# Configuración básica de Label Studio
 LABEL_STUDIO_PORT=8080
 LABEL_STUDIO_ADMIN_USERNAME=admin@example.com
 LABEL_STUDIO_ADMIN_PASSWORD=tu_contraseña_segura
+
+# URLs y configuración de API
+LABEL_STUDIO_URL=http://localhost:8080
+
+# API Keys (obtén estos desde Label Studio > Account & Settings > API Tokens)
+LABEL_STUDIO_LEGACY_API_KEY=tu_legacy_token_aqui
+LABEL_STUDIO_PERSONAL_API_KEY=tu_personal_token_aqui
+
+# Configuración de zona horaria
+TZ=America/Bogota
 ```
+
+**⚠️ Importante:** 
+- El archivo `.env` está en `.gitignore` por seguridad
+- Los API tokens son necesarios para la automatización de scripts
+- Usa `LABEL_STUDIO_LEGACY_API_KEY` para scripts automatizados (no expira)
+- Usa `LABEL_STUDIO_PERSONAL_API_KEY` como alternativa (puede expirar)
 
 ### 3. Iniciar Label Studio
 
@@ -89,15 +110,59 @@ http://localhost:8080
 
 ---
 
+## ⚙️ Configuración de Variables de Entorno
+
+### Obtener API Tokens
+
+1. **Accede a Label Studio:** `http://localhost:8080`
+2. **Ve a:** Account & Settings → API Tokens
+3. **Crea dos tokens:**
+   - **Legacy Token:** Para scripts automatizados (no expira)
+   - **Personal Access Token:** Como alternativa (puede expirar)
+
+### Variables Requeridas
+
+| Variable | Descripción | Ejemplo |
+|----------|-------------|---------|
+| `LABEL_STUDIO_PORT` | Puerto de acceso | `8080` |
+| `LABEL_STUDIO_ADMIN_USERNAME` | Usuario administrador | `admin@example.com` |
+| `LABEL_STUDIO_ADMIN_PASSWORD` | Contraseña administrador | `mi_password_seguro` |
+| `LABEL_STUDIO_URL` | URL base de la API | `http://localhost:8080` |
+| `LABEL_STUDIO_LEGACY_API_KEY` | Token para scripts | `abc123...` |
+| `LABEL_STUDIO_PERSONAL_API_KEY` | Token personal | `xyz789...` |
+
+---
+
 ## 📊 Configuración del Proyecto
 
-### PASO 1: Crear Proyecto
+### Método Automático (Recomendado)
+
+El sistema crea automáticamente proyectos al iniciar. Los proyectos se definen en `projects/projects_index.json`:
+
+```json
+{
+    "Etiquetado Menu test": {
+        "schema": "menu_schema.xml",
+        "data_source": "process/cluvi_preprocessed_sampled.json"
+    }
+}
+```
+
+**Estructura del archivo:**
+- `schema`: Archivo XML con la configuración de etiquetado
+- `data_source`: Archivo JSON con los datos a etiquetar
+
+### Método Manual
+
+Si prefieres crear proyectos manualmente:
+
+#### PASO 1: Crear Proyecto
 
 1. Click en **"Create Project"**
 2. Nombre: `Etiquetado Menu`
 3. Click **"Save"**
 
-### PASO 2: Importar CSV
+#### PASO 2: Importar CSV
 
 1. Click en **"Import"** (o Settings → Import)
 2. Click en **"Upload Files"**
@@ -106,172 +171,86 @@ http://localhost:8080
 
 ⚠️ **Importante:** Si el CSV tiene separador `;`, Label Studio puede tener problemas. Asegúrate de usar comas (`,`).
 
-### PASO 3: Configurar Interfaz de Etiquetado
+#### PASO 3: Configurar Interfaz de Etiquetado
 
 1. Settings → **"Labeling Interface"**
-2. Borra todo y pega esta configuración:
+2. Borra todo y pega la configuración desde `projects/menu_schema.xml`
+3. Click **"Save"**
 
-```xml
-<View>
-  <Style>
-    .header-main { color: #4CAF50; font-weight: bold; font-size: 1.5em; margin-bottom: 10px; }
-    .header-step { color: #2196F3; font-weight: bold; font-size: 1.2em; margin: 20px 0 10px; }
-    .header-sub { color: #333; font-weight: bold; font-size: 1.1em; margin-top: 15px; }
-    .tip { color: #666; font-style: italic; font-size: 0.9em; padding: 10px; background: #f5f5f5; border-radius: 4px; margin: 10px 0; }
-    .success { color: #4CAF50; font-weight: bold; text-align: center; padding: 15px; background: #e8f5e9; border-radius: 8px; margin: 20px 0; }
-    .attributes-box { background: #f9f9f9; padding: 15px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #2196F3; }
-  </Style>
+---
 
-  <!-- Main Header -->
-  <Header value="¡Bienvenido/a a Anotar Menús! 🍽️" className="header-main"/>
-  <Header value="Etiqueta platos, bebidas y más. Sigue los pasos, ¡es súper fácil! 😊" size="4" style="color: #666;"/>
+## 🤖 Gestión Automática de Proyectos
 
-  <!-- Step 1: Review Menu -->
-  <Header value="Paso 1: Revisa el Menú" className="header-step"/>
-  <View className="tip">
-    <Header value="💡 Consejo: Selecciona solo las palabras exactas que representen la entidad completa (ej. 'Pizza Margherita' como PLATO, no solo 'Pizza'). Evita solapamientos y asegúrate de que cada entidad sea independiente." size="5"/>
-  </View>
-  <View style="display: flex; flex-direction: column; gap: 10px;">
-    <Text name="text" value="Título: $label&#10;Descripción: $description&#10;Categoría: $category&#10;Categoría Principal: $main_category" granularity="word"/>
-    <Labels name="entities" toName="text" smart="true" showInline="true">
-      <Label value="INGREDIENTE" background="#FFB6B6"/>
-      <Label value="PLATO" background="#B2DFDB"/>
-      <Label value="BEBIDA" background="#BBDEFB"/>
-      <Label value="MARCA" background="#FFE0B2"/>
-    </Labels>
-  </View>
+### Configuración de Proyectos
 
-  <!-- Step 2: Add Attributes to Entities -->
-  <Header value="Paso 2: Agrega Atributos a las Entidades" className="header-step"/>
+Los proyectos se gestionan automáticamente mediante el archivo `projects/projects_index.json`:
 
-  <!-- Attributes for PLATO -->
-  <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="PLATO" className="attributes-box">
-    <Header value="⚙️ Atributos para PLATO:" className="header-sub"/>
-    <Header value="Tipo de Plato" size="5" className="header-sub"/>
-    <Choices name="course_type" toName="text" perRegion="true" choice="single" showInline="true">
-      <Choice value="Entrante"/>
-      <Choice value="Plato Principal"/>
-      <Choice value="Acompañamiento"/>
-      <Choice value="Postre"/>
-    </Choices>
-    <View className="tip">
-      <Header value="💡 Consejo: Basado en el contexto del menú, elige el tipo que mejor encaje. Por ejemplo, usa 'Entrante' para aperitivos ligeros y 'Plato Principal' para platos fuertes." size="5"/>
-    </View>
-  </View>
-
-  <!-- Attributes for BEBIDA -->
-  <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="BEBIDA" className="attributes-box">
-    <Header value="⚙️ Atributos para BEBIDA:" className="header-sub"/>
-    <Header value="Tipo de Bebida" size="5" className="header-sub"/>
-    <Choices name="beverage_type" toName="text" perRegion="true" choice="single" showInline="true">
-      <Choice value="Alcohólica"/>
-      <Choice value="No Alcohólica"/>
-    </Choices>
-    <Header value="Categoría de Bebida" size="5" className="header-sub"/>
-    <Choices name="beverage_category" toName="text" perRegion="true" choice="single" showInline="true">
-      <Choice value="Destilados"/>
-      <Choice value="Vinos"/>
-      <Choice value="Cervezas"/>
-      <Choice value="Cócteles"/>
-      <Choice value="Gaseosas"/>
-      <Choice value="Jugos y Bebidas Naturales"/>
-      <Choice value="Café o Té"/>
-      <Choice value="Otro"/>
-    </Choices>
-    <View className="tip">
-      <Header value="💡 Consejo: Usa 'Tipo de Bebida' para clasificar si es alcohólica o no (ej. 'Cerveza' → Alcohólica). Para 'Categoría', elige la más específica: 'Gaseosas' para bebidas carbonatadas comerciales (ej. 'Coca-Cola'), 'Jugos y Bebidas Naturales' para jugos frescos o smoothies (ej. 'Jugo de naranja'), 'Café o Té' para infusiones (ej. 'Capuchino'). Usa 'Otro' para casos como agua pura." size="5"/>
-    </View>
-  </View>
-
-  <!-- Attributes for INGREDIENTE -->
-  <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="INGREDIENTE" className="attributes-box">
-    <Header value="⚙️ Atributos para INGREDIENTE:" className="header-sub"/>
-    <Header value="Método de Cocción" size="5" className="header-sub"/>
-    <Choices name="cooking_method" toName="text" perRegion="true" choice="multiple" showInline="true">
-      <Choice value="Asado"/>
-      <Choice value="Frito"/>
-      <Choice value="Hervido"/>
-      <Choice value="Crudo"/>
-      <Choice value="Horneado"/>
-      <Choice value="Al Vapor"/>
-      <Choice value="Ahumado"/>
-      <Choice value="Tostado"/>
-      <Choice value="A la Plancha"/>
-      <Choice value="Salteado"/>
-      <Choice value="No Aplica"/>
-    </Choices>
-    <Header value="Estado de Preparación" size="5" className="header-sub"/>
-    <Choices name="preparation_state" toName="text" perRegion="true" choice="single" showInline="true">
-      <Choice value="Crudo"/>
-      <Choice value="Cocido"/>
-      <Choice value="Procesado"/>
-      <Choice value="Mezclado"/>
-      <Choice value="Fresco"/>
-      <Choice value="Congelado"/>
-      <Choice value="No Aplica"/>
-    </Choices>
-    <View className="tip">
-      <Header value="💡 Consejo: Para ingredientes como 'tomate fresco', elige 'Fresco' en Estado y 'Crudo' en Método si no se cocina. Selecciona múltiples métodos si aplica (ej. 'Frito' y 'Ahumado'). Usa 'No Aplica' para estados únicos." size="5"/>
-    </View>
-  </View>
-
-  <!-- Attributes for MARCA -->
-  <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="MARCA" className="attributes-box">
-    <Header value="⚙️ Atributos para MARCA:" className="header-sub"/>
-    <Header value="Tipo de Marca" size="5" className="header-sub"/>
-    <Choices name="brand_type" toName="text" perRegion="true" choice="single" showInline="true">
-      <Choice value="Marca de Comida"/>
-      <Choice value="Marca de Bebida"/>
-      <Choice value="Marca de Producto"/>
-    </Choices>
-    <View className="tip">
-      <Header value="💡 Consejo: Elige 'Marca de Comida' para marcas como 'Nestlé' en alimentos, 'Marca de Bebida' para 'Coca-Cola'. Usa 'Marca de Producto' para marcas no estándar y describe su categoría." size="5"/>
-    </View>
-  </View>
-
-  <!-- Step 3: Complete Metadata -->
-  <Header value="Paso 3: Completa los Metadatos" className="header-step"/>
-  <Collapse accordion="true">
-    <Panel value="📋 Metadatos del Menú">
-      <View style="padding: 15px;">
-        <Header value="Cocina de Origen" size="5" className="header-sub"/>
-        <Choices name="origin_cuisine" toName="text" choice="multiple" showInline="true" required="true">
-          <Choice value="Italiana"/>
-          <Choice value="Peruana"/>
-          <Choice value="Japonesa"/>
-          <Choice value="Colombiana"/>
-          <Choice value="Mexicana"/>
-          <Choice value="Brasileña"/>
-          <Choice value="Argentina"/>
-          <Choice value="Española"/>
-          <Choice value="Asiática"/>
-          <Choice value="Fusión"/>
-          <Choice value="Otra"/>
-        </Choices>
-        <View className="tip">
-          <Header value="💡 Consejo: Identifica el tipo de menú revisando platos e ingredientes (ej. 'Pasta' sugiere Italiana). Selecciona múltiples si es fusión, o 'Otra' para cocinas no listadas." size="5"/>
-        </View>
-        <Header value="Idioma del Menú" size="5" className="header-sub"/>
-        <Choices name="language" toName="text" choice="single" showInline="true" required="true">
-          <Choice value="Español"/>
-          <Choice value="Inglés"/>
-          <Choice value="Portugués"/>
-          <Choice value="Francés"/>
-          <Choice value="Italiano"/>
-          <Choice value="Otro"/>
-        </Choices>
-      </View>
-    </Panel>
-  </Collapse>
-
-  <!-- Final Message -->
-  <View className="success">
-    <Header value="✨ ¡Último paso! Revisa que todas las entidades tengan atributos correctos y consistentes. ¡Lo hiciste genial! ✨" size="4"/>
-  </View>
-</View>
+```json
+{
+    "Nombre del Proyecto": {
+        "schema": "menu_schema.xml",
+        "data_source": "process/cluvi_preprocessed_sampled.json"
+    }
+}
 ```
 
-3. Click **"Save"**
+### Archivos de Configuración
+
+- **`projects/menu_schema.xml`**: Configuración completa de la interfaz de etiquetado
+- **`projects/projects_index.json`**: Índice de proyectos con sus configuraciones
+- **`data/process/`**: Archivos de datos preparados para importar
+
+### Crear Nuevo Proyecto
+
+1. **Agrega el proyecto** a `projects/projects_index.json`
+2. **Prepara los datos** en formato JSON en `data/process/`
+3. **Reinicia el sistema**: `docker-compose restart`
+4. **El proyecto se crea automáticamente** con datos importados
+
+### Scripts de Gestión
+
+- **`create_project.py`**: Crea proyectos automáticamente al iniciar
+- **`add_task_to_project.py`**: Agrega nuevas tareas a proyectos existentes
+- **`delete_project.py`**: Elimina proyectos específicos
+- **`delete_task_to_project.py`**: Elimina tareas específicas de proyectos
+
+---
+
+## 🔧 Scripts de Automatización
+
+### Scripts Principales
+
+| Script | Función | Uso |
+|--------|---------|-----|
+| `create_project.py` | Crear proyectos automáticamente | Ejecuta al iniciar Label Studio |
+| `add_task_to_project.py` | Agregar tareas a proyectos | `python3 scripts/add_task_to_project.py` |
+| `delete_project.py` | Eliminar proyectos | `python3 scripts/delete_project.py` |
+| `delete_task_to_project.py` | Eliminar tareas específicas | `python3 scripts/delete_task_to_project.py` |
+| `export_annotations.py` | Exportar anotaciones | `python3 scripts/export_annotations.py` |
+
+### Scripts de Sistema
+
+| Script | Función | Uso |
+|--------|---------|-----|
+| `backup.sh` | Backup automático | Ejecuta 3 veces al día |
+| `restore.sh` | Restaurar desde backup | `./scripts/restore.sh` |
+| `export_annotations.sh` | Exportar anotaciones (shell) | Ejecuta automáticamente |
+
+### Ejecutar Scripts Manualmente
+
+```bash
+# Activar entorno virtual
+source activate_env.sh
+
+# Crear proyecto manualmente
+python3 scripts/create_project.py
+
+# Agregar tareas a proyecto existente
+python3 scripts/add_task_to_project.py
+
+# Exportar anotaciones
+python3 scripts/export_annotations.py JSON
+```
 
 ---
 
@@ -281,31 +260,40 @@ http://localhost:8080
 
 Los backups se ejecutan automáticamente **3 veces al día** (6 AM, 2 PM, 10 PM) y se guardan en la carpeta `./backups/`.
 
+**Características:**
+- ✅ Backups automáticos cada 8 horas
+- ✅ Limpieza automática de backups antiguos (>30 días)
+- ✅ Logs de backup en `backups/backup.log`
+- ✅ Compresión con tar.gz para optimizar espacio
+
 ### Ejecutar Backup Manual
 
 ```bash
-docker exec label-studio-backup /app/backup.sh
-```
+# Backup inmediato desde contenedor
+docker exec label-studio-backup /backup.sh
 
-Este comando realiza un backup inmediato sin detener los servicios.
+# Backup manual desde host
+./scripts/backup.sh
+```
 
 ### Restaurar desde Backup
 
 ```bash
+# Usar el script interactivo (recomendado)
 ./scripts/restore.sh
 ```
 
-Este script te permite:
-1. Ver todos los backups disponibles
-2. Elegir el más reciente o seleccionar uno específico
-3. Restaurar los datos (con confirmación de seguridad)
-4. Reiniciar automáticamente los servicios
+**El script de restauración te permite:**
+1. **Ver todos los backups disponibles** con fechas y tamaños
+2. **Elegir el más reciente** o seleccionar uno específico
+3. **Confirmar la operación** antes de proceder
+4. **Restaurar automáticamente** con reinicio de servicios
 
-**Flujo:**
-- Detiene los contenedores
-- Elimina el volumen actual
-- Restaura los datos del backup
-- Reinicia los servicios
+**Flujo de restauración:**
+- 🛑 Detiene los contenedores
+- 🗑️ Elimina el volumen actual
+- 📦 Restaura los datos del backup
+- 🚀 Reinicia los servicios automáticamente
 
 ⚠️ **Advertencia:** La restauración elimina todos los datos actuales. Asegúrate de seleccionar el backup correcto.
 
@@ -319,24 +307,119 @@ Este script te permite:
 └── backup.log
 ```
 
-Los backups se conservan durante 30 días y se limpian automáticamente después.
+**Política de retención:**
+- Backups se conservan durante **30 días**
+- Limpieza automática de archivos antiguos
+- Logs de backup se mantienen indefinidamente
 
 ---
 
 ## 📤 Exportar Resultados
 
-### Desde la UI
+### Exportación Automática
 
+El sistema exporta automáticamente las anotaciones **3 veces al día** (6 AM, 2 PM, 10 PM) a la carpeta `./exports/annotations/`.
+
+### Exportación Manual
+
+#### Desde la UI
 1. En el proyecto, click en **"Export"**
 2. Selecciona formato: **JSON** o **CSV**
 3. Click **"Export"**
 
+#### Desde Scripts
+
+```bash
+# Activar entorno virtual
+source activate_env.sh
+
+# Exportar todos los proyectos
+python3 scripts/export_annotations.py JSON
+
+# Exportar con formato específico
+python3 scripts/export_annotations.py CSV
+```
+
 ### Formato de Exportación
 
 Los resultados incluirán:
-- Entidades etiquetadas (INGREDIENTE, PLATO, BEBIDA, MARCA)
-- Atributos de cada entidad
-- Metadatos del menú (cocina de origen, idioma)
+- **Entidades etiquetadas:** INGREDIENTE, PLATO, BEBIDA, MARCA
+- **Atributos de cada entidad:** Métodos de cocción, tipos, categorías
+- **Metadatos del menú:** Cocina de origen, idioma
+- **Metadatos técnicos:** Timestamp, ID de proyecto, usuario anotador
+
+### Ubicación de Exports
+
+```
+./exports/
+├── annotations/
+│   ├── Etiquetado_Menu_test_1_20240115_140000.json
+│   ├── Etiquetado_Menu_test_1_20240115_220000.json
+│   └── logs/
+└── logs/
+```
+
+---
+
+## 🔑 API y Autenticación
+
+### Tipos de Tokens
+
+| Tipo | Descripción | Duración | Uso Recomendado |
+|------|-------------|----------|-----------------|
+| **Legacy Token** | Token tradicional | No expira | Scripts automatizados |
+| **Personal Access Token** | Token personal | Configurable | Desarrollo y pruebas |
+
+### Obtener Tokens
+
+1. **Accede a Label Studio:** `http://localhost:8080`
+2. **Ve a:** Account & Settings → API Tokens
+3. **Crea Legacy Token:**
+   - Click "Create Legacy Token"
+   - Copia el token generado
+   - Agrégalo a `.env` como `LABEL_STUDIO_LEGACY_API_KEY`
+4. **Crea Personal Token (opcional):**
+   - Click "Create Personal Access Token"
+   - Configura expiración
+   - Agrégalo a `.env` como `LABEL_STUDIO_PERSONAL_API_KEY`
+
+### Configuración en .env
+
+```bash
+# Prioridad: Legacy Token > Personal Token
+LABEL_STUDIO_LEGACY_API_KEY=abc123def456...
+LABEL_STUDIO_PERSONAL_API_KEY=xyz789uvw012...
+LABEL_STUDIO_URL=http://localhost:8080
+```
+
+### Verificar Autenticación
+
+```bash
+# Activar entorno virtual
+source activate_env.sh
+
+# Probar conexión
+python -c "
+from label_studio_sdk import LabelStudio
+from dotenv import load_dotenv
+import os
+load_dotenv()
+client = LabelStudio(base_url=os.getenv('LABEL_STUDIO_URL'), api_key=os.getenv('LABEL_STUDIO_LEGACY_API_KEY'))
+print('✅ Conectado como:', client.users.whoami().username)
+"
+```
+
+### Solución de Problemas de API
+
+**Error 401 - Token inválido:**
+- Verifica que el token sea correcto en `.env`
+- Regenera el token si es Personal Access Token
+- Usa Legacy Token para mayor estabilidad
+
+**Error de conexión:**
+- Verifica que Label Studio esté ejecutándose
+- Confirma la URL en `LABEL_STUDIO_URL`
+- Revisa los logs: `docker-compose logs -f labelstudio`
 
 ---
 
@@ -386,24 +469,58 @@ docker-compose down --remove-orphans
 
 ```
 .
-├── docker-compose.yml              # Configuración Docker
-├── .env                            # Variables de entorno (crear)
-├── scripts/
-│   ├── backup.sh                   # Script de backup manual
-│   └── restore.sh                  # Script de restauración
-├── backups/                        # Backups automáticos (creado automáticamente)
-├── data/
-│   ├── raw/                        # Datos fuente (entrada)
+├── docker-compose.yml              # Configuración Docker con servicios
+├── .env                           # Variables de entorno (crear)
+├── .gitignore                     # Archivos ignorados por Git
+├── requirements.txt               # Dependencias Python
+├── activate_env.sh                 # Script para activar entorno virtual
+├── README.MD                      # Esta guía completa
+│
+├── scripts/                       # Scripts de automatización
+│   ├── create_project.py          # Crear proyectos automáticamente
+│   ├── add_task_to_project.py     # Agregar tareas a proyectos
+│   ├── delete_project.py          # Eliminar proyectos
+│   ├── delete_task_to_project.py  # Eliminar tareas específicas
+│   ├── export_annotations.py      # Exportar anotaciones (Python)
+│   ├── export_annotations.sh      # Exportar anotaciones (Shell)
+│   ├── backup.sh                  # Script de backup manual
+│   └── restore.sh                 # Script de restauración interactivo
+│
+├── projects/                      # Configuración de proyectos
+│   ├── menu_schema.xml            # Schema de etiquetado NER
+│   └── projects_index.json        # Índice de proyectos y datos
+│
+├── data/                          # Datos del proyecto
+│   ├── raw/                       # Datos fuente originales
 │   │   ├── cluvi_preprocessed.csv
 │   │   ├── cluvi_preprocessed.json
 │   │   └── cluvi_preprocessed.parquet
-│   └── process/                    # Datos preparados para Label Studio
+│   └── process/                   # Datos preparados para Label Studio
 │       ├── cluvi_preprocessed_sampled.csv
 │       ├── cluvi_preprocessed_sampled.json
 │       └── cluvi_preprocessed_sampled.parquet
-├── exports/                        # Resultados exportados por Label Studio
-└── README.md                       # Esta guía
+│
+├── exports/                       # Resultados exportados
+│   ├── annotations/               # Anotaciones exportadas automáticamente
+│   └── logs/                      # Logs de exportación
+│
+├── backups/                       # Backups automáticos (creado automáticamente)
+│   ├── label-studio-backup-*.tar.gz
+│   └── backup.log
+│
+└── .venv/                         # Entorno virtual Python (opcional)
 ```
+
+### Archivos Clave
+
+| Archivo | Propósito |
+|---------|-----------|
+| `docker-compose.yml` | Configuración completa de servicios Docker |
+| `.env` | Variables de entorno y configuración |
+| `projects/menu_schema.xml` | Interfaz de etiquetado NER completa |
+| `projects/projects_index.json` | Configuración de proyectos automáticos |
+| `scripts/create_project.py` | Automatización de creación de proyectos |
+| `activate_env.sh` | Gestión inteligente de entornos virtuales |
 
 ---
 
@@ -427,58 +544,293 @@ El sistema combinará automáticamente estas columnas en un solo texto para etiq
 
 ## 🚨 Solución de Problemas
 
-### Label Studio no inicia
+### Problemas de Inicio
+
+#### Label Studio no inicia
 
 ```bash
+# Ver logs detallados
 docker-compose logs -f labelstudio
+
+# Verificar puerto en uso
+netstat -tulpn | grep :8080
 ```
 
-Revisa si hay errores en los logs. Problema común: puerto 8080 en uso.
+**Soluciones comunes:**
+- Puerto 8080 ocupado: Cambia `LABEL_STUDIO_PORT` en `.env`
+- Permisos incorrectos: `chmod +x scripts/*.sh`
+- Variables de entorno faltantes: Verifica `.env`
 
-### Página en blanco
+#### Página en blanco o errores de carga
 
-- Limpia la caché del navegador (Ctrl+Shift+Del)
-- Accede directamente a: `http://localhost:8080/user/login/`
-- Reinicia el contenedor: `docker-compose restart`
+```bash
+# Limpiar caché del navegador
+Ctrl+Shift+Del
 
-### Advertencia de contenedores huérfanos
+# Acceso directo
+http://localhost:8080/user/login/
+
+# Reiniciar contenedores
+docker-compose restart
+```
+
+### Problemas de API y Autenticación
+
+#### Error 401 - Token inválido
+
+```bash
+# Verificar tokens en .env
+cat .env | grep API_KEY
+
+# Probar conexión
+python -c "
+from label_studio_sdk import LabelStudio
+from dotenv import load_dotenv
+import os
+load_dotenv()
+try:
+    client = LabelStudio(base_url=os.getenv('LABEL_STUDIO_URL'), api_key=os.getenv('LABEL_STUDIO_LEGACY_API_KEY'))
+    print('✅ Token válido:', client.users.whoami().username)
+except Exception as e:
+    print('❌ Error:', e)
+"
+```
+
+**Soluciones:**
+- Regenera el token en Label Studio > Account & Settings > API Tokens
+- Usa Legacy Token en lugar de Personal Token
+- Verifica que el token esté completo en `.env`
+
+#### Error de conexión a API
+
+```bash
+# Verificar que Label Studio esté ejecutándose
+docker-compose ps
+
+# Verificar URL
+echo $LABEL_STUDIO_URL
+
+# Probar conectividad
+curl -I http://localhost:8080/api/health/
+```
+
+### Problemas de Docker
+
+#### Contenedores huérfanos
 
 ```
 WARNING: Found orphan containers (label-studio-db)
 ```
 
-Ejecuta:
 ```bash
+# Limpiar contenedores huérfanos
 docker-compose down --remove-orphans
 docker-compose up -d
 ```
 
-Esto sucede cuando eliminas servicios del `docker-compose.yml` pero sus contenedores siguen existiendo.
-
-### Problemas con permisos en backups
-
-Si ves errores de permisos al restaurar, asegúrate de que los scripts sean ejecutables:
+#### Problemas de volúmenes
 
 ```bash
-chmod +x scripts/backup.sh
-chmod +x scripts/restore.sh
+# Ver volúmenes existentes
+docker volume ls
+
+# Eliminar volumen corrupto
+docker volume rm label_studio_data
+docker volume create label_studio_data
+
+# Reiniciar servicios
+docker-compose up -d
+```
+
+### Problemas de Scripts
+
+#### Permisos de ejecución
+
+```bash
+# Hacer scripts ejecutables
+chmod +x scripts/*.sh
+chmod +x scripts/*.py
+```
+
+#### Entorno virtual no activado
+
+```bash
+# Usar script de activación automática
+source activate_env.sh
+
+# Verificar entorno activo
+which python
+which pip
+```
+
+#### Dependencias faltantes
+
+```bash
+# Instalar dependencias
+pip install -r requirements.txt
+
+# Verificar instalación
+pip list | grep label-studio
+```
+
+### Problemas de Backups
+
+#### Backup fallido
+
+```bash
+# Ver logs de backup
+cat backups/backup.log
+
+# Ejecutar backup manual
+docker exec label-studio-backup /backup.sh
+
+# Verificar espacio en disco
+df -h
+```
+
+#### Restauración fallida
+
+```bash
+# Verificar integridad del backup
+tar -tzf backups/label-studio-backup-*.tar.gz
+
+# Restaurar con script interactivo
+./scripts/restore.sh
+```
+
+### Problemas de Datos
+
+#### Proyecto no se crea automáticamente
+
+```bash
+# Verificar configuración
+cat projects/projects_index.json
+
+# Verificar datos
+ls -la data/process/
+
+# Ejecutar creación manual
+python3 scripts/create_project.py
+```
+
+#### Datos no se importan
+
+```bash
+# Verificar formato JSON
+python -c "
+import json
+with open('data/process/cluvi_preprocessed_sampled.json') as f:
+    data = json.load(f)
+    print('✅ JSON válido, registros:', len(data))
+"
+```
+
+### Logs y Diagnóstico
+
+#### Ver todos los logs
+
+```bash
+# Logs de todos los servicios
+docker-compose logs -f
+
+# Logs específicos
+docker-compose logs -f labelstudio
+docker-compose logs -f backup
+```
+
+#### Estado del sistema
+
+```bash
+# Estado de contenedores
+docker-compose ps
+
+# Uso de recursos
+docker stats
+
+# Espacio en disco
+df -h
+du -sh backups/ exports/
 ```
 
 ---
 
 ## 📚 Recursos
 
-- [Documentación Label Studio](https://labelstud.io/guide/)
-- [Label Studio API](https://labelstud.io/api/)
-- [Guía de Etiquetado NER](https://labelstud.io/templates/named_entity.html)
+### Documentación Oficial
+
+- [Label Studio Documentation](https://labelstud.io/guide/)
+- [Label Studio API Reference](https://labelstud.io/api/)
+- [Label Studio SDK Documentation](https://labelstud.io/sdk/)
 - [Docker Compose Documentation](https://docs.docker.com/compose/)
+
+### Guías Específicas
+
+- [Named Entity Recognition (NER) Template](https://labelstud.io/templates/named_entity.html)
+- [Label Studio Configuration Guide](https://labelstud.io/guide/setup.html)
+- [API Authentication Guide](https://labelstud.io/guide/api.html)
+
+### Herramientas Relacionadas
+
+- [Label Studio Community](https://github.com/heartexlabs/label-studio)
+- [Label Studio Templates](https://labelstud.io/templates/)
+- [Label Studio Integrations](https://labelstud.io/integrations/)
 
 ---
 
 ## 📞 Soporte
 
-Para problemas o dudas:
-1. Revisa los logs: `docker-compose logs -f`
-2. Consulta la documentación oficial
-3. Verifica que todos los archivos estén en su lugar
-4. Asegúrate de que los permisos de los scripts sean correctos
+### Antes de Contactar
+
+1. **Revisa los logs:** `docker-compose logs -f`
+2. **Consulta esta documentación** completa
+3. **Verifica la configuración** en `.env`
+4. **Ejecuta diagnósticos:** `docker-compose ps` y `df -h`
+
+### Problemas Comunes
+
+- **Token API inválido:** Regenera en Label Studio > Account & Settings > API Tokens
+- **Puerto ocupado:** Cambia `LABEL_STUDIO_PORT` en `.env`
+- **Proyecto no se crea:** Verifica `projects/projects_index.json` y datos en `data/process/`
+- **Backup fallido:** Verifica espacio en disco y permisos
+
+### Información del Sistema
+
+```bash
+# Información completa del sistema
+echo "=== Docker Compose Status ==="
+docker-compose ps
+
+echo "=== Disk Usage ==="
+df -h
+
+echo "=== Backup Status ==="
+ls -la backups/
+
+echo "=== Export Status ==="
+ls -la exports/
+
+echo "=== Environment Check ==="
+cat .env | grep -E "(PORT|URL|API_KEY)" | head -5
+```
+
+---
+
+## 🎯 Resumen de Características
+
+### ✅ Funcionalidades Implementadas
+
+- **🤖 Automatización completa** de creación de proyectos
+- **💾 Backups automáticos** cada 8 horas con retención de 30 días
+- **📤 Exportación automática** de anotaciones
+- **🔑 Gestión de API tokens** con autenticación robusta
+- **📊 Interfaz de etiquetado NER** completa y personalizada
+- **🔧 Scripts de gestión** para todas las operaciones
+- **🐳 Configuración Docker** optimizada con servicios separados
+- **📁 Estructura organizada** con separación clara de responsabilidades
+
+### 🚀 Próximas Mejoras Sugeridas
+
+- **🔄 Sincronización automática** con repositorios Git
+---
+
+*Última actualización: $(date +%Y-%m-%d)*
