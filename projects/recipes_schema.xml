@@ -1,0 +1,64 @@
+<View>
+  <Style>
+    .header-main { color: #4CAF50; font-weight: bold; font-size: 1.5em; margin-bottom: 10px; }
+    .header-step { color: #2196F3; font-weight: bold; font-size: 1.2em; margin: 20px 0 10px; }
+    .header-sub { color: #333; font-weight: bold; font-size: 1.1em; margin-top: 15px; }
+    .tip { color: #666; font-style: italic; font-size: 0.9em; padding: 10px; background: #f5f5f5; border-radius: 4px; margin: 10px 0; }
+    .success { color: #4CAF50; font-weight: bold; text-align: center; padding: 15px; background: #e8f5e9; border-radius: 8px; margin: 20px 0; }
+    .attributes-box { background: #f9f9f9; padding: 15px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #2196F3; }
+  </Style>
+
+  <!-- Main Header -->
+  <Header value="¡Bienvenido/a a Anotar Recetas! 🥄" className="header-main"/>
+  <Header value="Etiqueta solo los ingredientes de la receta. Es sencillo y rápido. 😊" size="4" style="color: #666;"/>
+
+  <!-- Paso 1: Revisa la receta -->
+  <Header value="Paso 1: Revisa la Receta" className="header-step"/>
+  <View className="tip">
+    <Header value="💡 Consejo: Selecciona solo las palabras exactas que representen el *ingrediente completo* (por ejemplo, 'queso parmesano rallado'). Evita incluir instrucciones de preparación o cantidades." size="5"/>
+  </View>
+  <View style="display: flex; flex-direction: column; gap: 10px;">
+    <Text name="sentence" value="$sentence" granularity="word"/>
+    <Labels name="entities" toName="sentence" smart="true" showInline="true">
+      <Label value="INGREDIENTE" background="#FFB6B6"/>
+    </Labels>
+  </View>
+
+  <!-- Paso 2: Agrega atributos a los ingredientes -->
+  <Header value="Paso 2: Agrega Atributos a los Ingredientes" className="header-step"/>
+  <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="INGREDIENTE" className="attributes-box">
+    <Header value="⚙️ Atributos para INGREDIENTE:" className="header-sub"/>
+    <Header value="Método de Cocción" size="5" className="header-sub"/>
+    <Choices name="cooking_method" toName="sentence" perRegion="true" choice="multiple" showInline="true">
+      <Choice value="Asado"/>
+      <Choice value="Frito"/>
+      <Choice value="Hervido"/>
+      <Choice value="Crudo"/>
+      <Choice value="Horneado"/>
+      <Choice value="Al Vapor"/>
+      <Choice value="Ahumado"/>
+      <Choice value="Tostado"/>
+      <Choice value="A la Plancha"/>
+      <Choice value="Salteado"/>
+      <Choice value="No Aplica"/>
+    </Choices>
+    <Header value="Estado de Preparación" size="5" className="header-sub"/>
+    <Choices name="preparation_state" toName="sentence" perRegion="true" choice="single" showInline="true">
+      <Choice value="Crudo"/>
+      <Choice value="Cocido"/>
+      <Choice value="Procesado"/>
+      <Choice value="Mezclado"/>
+      <Choice value="Fresco"/>
+      <Choice value="Congelado"/>
+      <Choice value="No Aplica"/>
+    </Choices>
+    <View className="tip">
+      <Header value="💡 Consejo: Por ejemplo, para 'tomate fresco', elige 'Fresco' en Estado y 'Crudo' en Método si no tiene cocción. Puedes seleccionar múltiples métodos si es necesario. Usa 'No Aplica' si no corresponde." size="5"/>
+    </View>
+  </View>
+
+  <!-- Mensaje final -->
+  <View className="success">
+    <Header value="✨ ¡Último paso! Revisa que todos los ingredientes estén bien etiquetados y tengan sus atributos. ¡Gracias por tu ayuda! ✨" size="4"/>
+  </View>
+</View>
