@@ -1,3 +1,4 @@
 {
-    "Etiquetado Menu": {"schema":"menu_schema.xml","data_source":"process/cluvi_preprocessed_sampled.json"}
+    "Etiquetado Menu": {"schema":"menu_schema.xml","data_source":"process/cluvi_preprocessed_sampled.json"},
+    "Etiquetado Recetas": {"schema":"recipes_schema.xml","data_source":"process/recipes_preprocessed.json"}
 }
