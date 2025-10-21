@@ -28,6 +28,7 @@
   <Header value="Paso 2: Agrega Atributos a los Ingredientes" className="header-step"/>
   <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="INGREDIENTE" className="attributes-box">
     <Header value="⚙️ Atributos para INGREDIENTE:" className="header-sub"/>
+
     <Header value="Método de Cocción" size="5" className="header-sub"/>
     <Choices name="cooking_method" toName="sentence" perRegion="true" choice="multiple" showInline="true">
       <Choice value="Asado"/>
@@ -42,6 +43,7 @@
       <Choice value="Salteado"/>
       <Choice value="No Aplica"/>
     </Choices>
+
     <Header value="Estado de Preparación" size="5" className="header-sub"/>
     <Choices name="preparation_state" toName="sentence" perRegion="true" choice="single" showInline="true">
       <Choice value="Crudo"/>
@@ -52,8 +54,40 @@
       <Choice value="Congelado"/>
       <Choice value="No Aplica"/>
     </Choices>
+
+    <Header value="Cocina de Origen del Ingrediente" size="5" className="header-sub"/>
+    <Choices name="ingredient_origin_cuisine" toName="sentence" perRegion="true" choice="multiple" showInline="true" required="true">
+      <Choice value="Italiana"/>
+      <Choice value="Peruana"/>
+      <Choice value="Japonesa"/>
+      <Choice value="Colombiana"/>
+      <Choice value="Mexicana"/>
+      <Choice value="Brasileña"/>
+      <Choice value="Argentina"/>
+      <Choice value="Española"/>
+      <Choice value="Asiática"/>
+      <Choice value="Fusión"/>
+      <Choice value="Otra"/>
+    </Choices>
     <View className="tip">
-      <Header value="💡 Consejo: Por ejemplo, para 'tomate fresco', elige 'Fresco' en Estado y 'Crudo' en Método si no tiene cocción. Puedes seleccionar múltiples métodos si es necesario. Usa 'No Aplica' si no corresponde." size="5"/>
+      <Header value="💡 Consejo: Identifica el origen cultural del ingrediente (ej. 'Pasta' sugiere Italiana). Selecciona múltiples si es fusión, o 'Otra' para cocinas no listadas." size="5"/>
+    </View>
+
+    <Header value="Idioma del Ingrediente" size="5" className="header-sub"/>
+    <Choices name="ingredient_language" toName="sentence" perRegion="true" choice="single" showInline="true" required="true">
+      <Choice value="Español"/>
+      <Choice value="Inglés"/>
+      <Choice value="Portugués"/>
+      <Choice value="Francés"/>
+      <Choice value="Italiano"/>
+      <Choice value="Otro"/>
+    </Choices>
+    <View className="tip">
+      <Header value="💡 Consejo: Elige el idioma en el que el ingrediente es comúnmente conocido o presentado en la receta." size="5"/>
+    </View>
+
+    <View className="tip">
+      <Header value="💡 Consejo: Para 'tomate fresco', elige 'Fresco' en Estado y 'Crudo' en Método si no tiene cocción. Puedes seleccionar múltiples métodos si es necesario. Usa 'No Aplica' si no corresponde. Además, especifica la cocina de origen y el idioma del ingrediente si aplica." size="5"/>
     </View>
   </View>
 
