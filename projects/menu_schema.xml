@@ -426,7 +426,7 @@
           <HyperText name="language_tip_text" value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🗣️ Idioma del Menú:&lt;/strong&gt;&lt;ul&gt;
           &lt;li&gt;Selecciona el &lt;strong&gt;idioma predominante&lt;/strong&gt; en el que está redactado el menú o la mayor parte de los nombres y descripciones de platos.&lt;/li&gt;
           &lt;li&gt;Si el menú contiene términos de varios idiomas, selecciona el más representativo (ejemplo: 'Pasta alla Bolognese', 'Pollo a la Brasa' — selecciona &lt;strong&gt;Español&lt;/strong&gt; si la mayoría está en español, aunque haya palabras extranjeras típicas).&lt;/li&gt;
-          &lt;li&gt;Para menús bilingües (ej. columnas en inglés y español), selecciona &lt;strong&gt;Otro&lt;/strong&gt; y anota el detalle si es posible.&lt;/li&gt;
+          &lt;li&gt;Para menús bilingües (ej. columnas en inglés y español), selecciona &lt;strong&gt;Otro&lt;/strong&gt;.&lt;/li&gt;
           &lt;li&gt;Recuerda: El idioma puede aportar contexto cultural importante sobre el restaurante y sus clientes.&lt;/li&gt;
         &lt;/ul&gt;&lt;/span&gt;"/>
         </View>
