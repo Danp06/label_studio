@@ -1,36 +1,277 @@
 <View>
   <Style>
-    .header-main { color: #4CAF50; font-weight: bold; font-size: 1.5em; margin-bottom: 10px; }
-    .header-step { color: #2196F3; font-weight: bold; font-size: 1.2em; margin: 20px 0 10px; }
-    .header-sub { color: #333; font-weight: bold; font-size: 1.1em; margin-top: 15px; }
-    .tip { color: #666; font-style: italic; font-size: 0.9em; padding: 10px; background: #f5f5f5; border-radius: 4px; margin: 10px 0; }
-    .success { color: #4CAF50; font-weight: bold; text-align: center; padding: 15px; background: #e8f5f9; border-radius: 8px; margin: 20px 0; }
-    .attributes-box { background: #f9f9f9; padding: 15px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #2196F3; }
-  </Style>
+    /* ===== MAIN LAYOUT Y COLORS ===== */
+    :root {
+      --primary-color: #2563eb;
+      --secondary-color: #059669;
+      --accent-color: #dc2626;
+      --warning-color: #d97706;
+      --success-color: #16a34a;
+      --info-color: #0891b2;
+      --light-bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
 
-  <!-- Main Header -->
-  <Header value="¡Bienvenido/a a Anotar Recetas! 🥄" className="header-main"/>
-  <Header value="Etiqueta solo los ingredientes de la receta. Es sencillo y rápido. 😊" size="4" style="color: #666;"/>
+    /* ===== MAIN HEADERS ===== */
+    .header-main {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      font-weight: 700;
+      font-size: 2.5em;
+      margin: 0 0 15px 0;
+      text-align: center;
+      padding: 25px 20px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .description-text {
+      font-size: 1.2em;
+      color: var(--text-secondary);
+      text-align: center;
+      margin: 0 0 30px 0;
+      padding: 15px 20px;
+      background: var(--light-bg);
+      border-radius: var(--radius-md);
+      border-left: 4px solid var(--primary-color);
+    }
+
+    /* ===== STEP HEADERS ===== */
+    .header-step {
+      background: linear-gradient(90deg, var(--primary-color), var(--info-color));
+      color: white;
+      font-weight: 600;
+      font-size: 1.8em;
+      margin: 40px 0 20px 0;
+      padding: 20px 25px;
+      border-radius: var(--radius-md);
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+
+    .header-step::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--warning-color), var(--accent-color));
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+    }
+
+    /* ===== SUB HEADERS ===== */
+    .header-sub {
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 1.3em;
+      margin: 25px 0 15px 0;
+      padding: 12px 16px;
+      background: var(--light-bg);
+      border-left: 4px solid var(--secondary-color);
+      border-radius: var(--radius-sm);
+    }
+
+    /* ===== TIPS Y ADVICE ===== */
+    .tip {
+      background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+      color: var(--text-primary);
+      font-size: 1em;
+      padding: 20px;
+      border-radius: var(--radius-md);
+      margin: 20px 0;
+      border-left: 5px solid var(--info-color);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+
+    .tip::before {
+      content: '💡';
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 1.2em;
+    }
+
+    .tip span {
+      display: block;
+      line-height: 1.6;
+    }
+
+    .tip ul {
+      margin: 12px 0 0 0;
+      padding-left: 20px;
+    }
+
+    .tip li {
+      margin: 6px 0;
+      padding: 0;
+    }
+
+    .tip p {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ===== ATTRIBUTES BOXES ===== */
+    .attributes-box {
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: var(--radius-lg);
+      margin: 20px 0;
+      border: 2px solid var(--border-color);
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
+    }
+
+    .attributes-box:hover {
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-color);
+    }
+
+    /* ===== CHOICES CONTAINERS ===== */
+    .choices-container {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: var(--light-bg);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    /* ===== SUCCESS MESSAGE ===== */
+    .success {
+      background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+      color: var(--success-color);
+      font-weight: 600;
+      text-align: center;
+      padding: 25px;
+      border-radius: var(--radius-lg);
+      margin: 40px 0;
+      font-size: 1.4em;
+      border: 2px solid var(--success-color);
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+
+    .success::before {
+      content: '✨';
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      font-size: 1.5em;
+    }
+
+    .success::after {
+      content: '✨';
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.5em;
+    }
+
+    /* ===== COLLAPSE PANELS ===== */
+    .collapse-panel {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      margin: 20px 0;
+    }
+
+    /* ===== LABEL COLORS ===== */
+    .label-ingrediente {
+      background: linear-gradient(135deg, #fef2f2, #fee2e2) !important;
+      border: 2px solid #fca5a5 !important;
+      color: #991b1b !important;
+    }
+
+    .label-plato {
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7) !important;
+      border: 2px solid #86efac !important;
+      color: #166534 !important;
+    }
+
+    .label-bebida {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe) !important;
+      border: 2px solid #93c5fd !important;
+      color: #1e40af !important;
+    }
+
+    .label-marca {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7) !important;
+      border: 2px solid #fcd34d !important;
+      color: #92400e !important;
+    }
+
+    /* ===== RESPONSIVE DESIGN ===== */
+    @media (max-width: 768px) {
+      .header-main {
+        font-size: 2em;
+        padding: 20px 15px;
+      }
+      
+      .header-step {
+        font-size: 1.5em;
+        padding: 15px 20px;
+      }
+      
+      .attributes-box {
+        padding: 20px 15px;
+      }
+    }
+
+    /* ===== ANIMATIONS ===== */
+    .attributes-box {
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </Style>
+  <!-- ===== MAIN HEADER ===== -->
+  <Header value="🥄 Anotación de Recetas Inteligente 🥄" className="header-main"/>
+  <Header value="Etiqueta ingredientes de forma precisa y eficiente. ¡Sigue los pasos y obtén resultados profesionales! 🚀" className="description-text"/>
 
   <!-- Paso 1: Revisa la receta -->
-  <Header value="Paso 1: Revisa la Receta" className="header-step"/>
+  <!-- ===== STEP 1: ENTITY LABELING ===== -->
+  <Header value="📝 Paso 1: Etiqueta los Ingredientes" className="header-step"/>
+  
   <View className="tip">
-    <Header value="💡 Consejo: Etiqueta la frase completa que describe el *ingrediente* (ej. 'queso parmesano'). No incluyas cantidades (ej. '200g') ni instrucciones de preparación (ej. 'picado')." size="5"/>
+    <HyperText name="main_recipe_tip_text" value="&lt;span style='font-size: 1em; line-height: 1.6;'&gt;&lt;strong&gt;🎯 Instrucciones Clave:&lt;/strong&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Selecciona frases completas:&lt;/strong&gt; Etiqueta 'queso parmesano' como INGREDIENTE, no solo 'queso'.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Evita solapamientos:&lt;/strong&gt; Cada palabra debe pertenecer a una sola entidad.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;No incluyas cantidades:&lt;/strong&gt; Evita '200g de azúcar', etiqueta solo 'azúcar'.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Consistencia:&lt;/strong&gt; Mantén el mismo criterio para entidades similares.&lt;/li&gt;&lt;/ul&gt;&lt;/span&gt;"/>
   </View>
-  <View style="display: flex; flex-direction: column; gap: 10px;">
-    <Text name="sentence" value="$sentence" granularity="word"/>
-    <Labels name="entities" toName="sentence" smart="true" showInline="true">
-      <Label value="INGREDIENTE" background="#FFB6B6"/>
+  <View style="display: flex; flex-direction: column; gap: 15px; padding: 20px; background: var(--light-bg); border-radius: var(--radius-md); margin: 20px 0;">
+    <HyperText name="text" value="&lt;div style='background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'&gt;&lt;strong&gt;📋 Información de la Receta:&lt;/strong&gt;&lt;br/&gt;&lt;strong&gt;Título:&lt;/strong&gt; $label&lt;br/&gt;&lt;strong&gt;Descripción:&lt;/strong&gt; $description&lt;br/&gt;&lt;strong&gt;Categoría:&lt;/strong&gt; $category&lt;br/&gt;&lt;strong&gt;Categoría Principal:&lt;/strong&gt; $main_category&lt;/div&gt;" granularity="word"/>
+    <Labels name="entities" toName="text" smart="true" showInline="true">
+      <Label value="INGREDIENTE" background="#FFB6B6" className="label-ingrediente"/>
     </Labels>
   </View>
 
   <!-- Paso 2: Agrega atributos a los ingredientes -->
-  <Header value="Paso 2: Agrega Atributos a los Ingredientes" className="header-step"/>
+  <!-- ===== STEP 2: ATTRIBUTES ===== -->
+  <Header value="🥕 Paso 2: Agrega Atributos a los Ingredientes" className="header-step"/>
   <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="INGREDIENTE" className="attributes-box">
-    <Header value="⚙️ Atributos para INGREDIENTE:" className="header-sub"/>
-
-    <Header value="Método de Cocción" size="5" className="header-sub"/>
-    <Choices name="cooking_method" toName="sentence" perRegion="true" choice="multiple" showInline="true">
+    <Header value="🥕 Atributos para INGREDIENTE" className="header-sub"/>
+    
+    <Header value="Método de Cocción" className="header-sub"/>
+    <Choices name="cooking_method" toName="text" perRegion="true" choice="multiple" showInline="true" className="choices-container">
       <Choice value="Asado"/>
       <Choice value="Frito"/>
       <Choice value="Hervido"/>
@@ -44,25 +285,26 @@
       <Choice value="No Aplica"/>
     </Choices>
     <View className="tip">
-      <Header value="💡 Consejo: Selecciona el método principal de cocción del ingrediente. Si no se cocina o la información no está disponible, elige 'No Aplica'. Puedes seleccionar múltiples si es relevante (ej. 'Asado' y 'Ahumado')." size="5"/>
+      <HyperText name="cooking_method_tip_text" value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🔥 Métodos de Cocción:&lt;/strong&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Principal:&lt;/strong&gt; Elige el método principal de cocción del ingrediente.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Múltiples:&lt;/strong&gt; Puedes seleccionar varios si aplica (ej. 'Asado' y 'Ahumado').&lt;/li&gt;&lt;li&gt;&lt;strong&gt;No Aplica:&lt;/strong&gt; Si no se cocina o la información no está en la receta.&lt;/li&gt;&lt;/ul&gt;&lt;/span&gt;"/>
     </View>
 
-    <Header value="Estado de Preparación" size="5" className="header-sub"/>
-    <Choices name="preparation_state" toName="sentence" perRegion="true" choice="single" showInline="true">
+    <Header value="Estado de Preparación" className="header-sub"/>
+    <Choices name="preparation_state" toName="text" perRegion="true" choice="single" showInline="true" className="choices-container">
       <Choice value="Crudo"/>
       <Choice value="Cocido"/>
       <Choice value="Procesado"/>
       <Choice value="Mezclado"/>
       <Choice value="Fresco"/>
       <Choice value="Congelado"/>
+      <Choice value="Seco"/>
       <Choice value="No Aplica"/>
     </Choices>
     <View className="tip">
-      <Header value="💡 Consejo: Describe el estado del ingrediente antes de su uso en la receta (ej. 'Fresco' para hierbas, 'Procesado' para salsas). Si no aplica o no está claro, selecciona 'No Aplica'." size="5"/>
+      <HyperText name="preparation_state_tip_text" value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;✨ Estado de Preparación:&lt;/strong&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Pre-uso:&lt;/strong&gt; Describe cómo se presenta el ingrediente antes de su uso (ej. 'Fresco' para hierbas, 'Procesado' para salsas).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;No Aplica:&lt;/strong&gt; Si el estado no es relevante o la información no está clara.&lt;/li&gt;&lt;/ul&gt;&lt;/span&gt;"/>
     </View>
 
-    <Header value="Cocina de Origen del Ingrediente" size="5" className="header-sub"/>
-    <Choices name="ingredient_origin_cuisine" toName="sentence" perRegion="true" choice="multiple" showInline="true" required="true">
+    <Header value="Cocina de Origen del Ingrediente" className="header-sub"/>
+    <Choices name="ingredient_origin_cuisine" toName="text" perRegion="true" choice="multiple" showInline="true" required="true" className="choices-container">
       <Choice value="Italiana"/>
       <Choice value="Peruana"/>
       <Choice value="Japonesa"/>
@@ -72,29 +314,34 @@
       <Choice value="Argentina"/>
       <Choice value="Española"/>
       <Choice value="Asiática"/>
+      <Choice value="Mediterránea"/>
+      <Choice value="Americana"/>
       <Choice value="Fusión"/>
       <Choice value="Otra"/>
     </Choices>
     <View className="tip">
-      <Header value="💡 Consejo: Identifica la cocina de origen principal del ingrediente (ej. 'Pasta' para Italiana, 'Wasabi' para Japonesa). Selecciona múltiples si es una fusión o 'Otra' si no está en la lista." size="5"/>
+      <HyperText name="ingredient_origin_cuisine_tip_text" value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🌍 Origen del Ingrediente:&lt;/strong&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Identifica:&lt;/strong&gt; La cocina principal asociada al ingrediente (ej. 'Pasta' → Italiana, 'Wasabi' → Japonesa).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Múltiples:&lt;/strong&gt; Para ingredientes usados en varias cocinas o fusiones.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;'Otra':&lt;/strong&gt; Si no está en la lista o es muy específico/desconocido.&lt;/li&gt;&lt;/ul&gt;&lt;/span&gt;"/>
     </View>
 
-    <Header value="Idioma del Ingrediente" size="5" className="header-sub"/>
-    <Choices name="ingredient_language" toName="sentence" perRegion="true" choice="single" showInline="true" required="true">
+    <Header value="Idioma del Ingrediente" className="header-sub"/>
+    <Choices name="ingredient_language" toName="text" perRegion="true" choice="single" showInline="true" required="true" className="choices-container">
       <Choice value="Español"/>
       <Choice value="Inglés"/>
       <Choice value="Portugués"/>
       <Choice value="Francés"/>
       <Choice value="Italiano"/>
+      <Choice value="Japonés"/>
+      <Choice value="Chino"/>
       <Choice value="Otro"/>
     </Choices>
     <View className="tip">
-      <Header value="💡 Consejo: Selecciona el idioma en el que el ingrediente es más conocido o se presenta en la receta (ej. 'Parmesan' en inglés, 'Jalapeño' en español)." size="5"/>
+      <HyperText name="ingredient_language_tip_text" value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🗣️ Idioma del Ingrediente:&lt;/strong&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Contexto:&lt;/strong&gt; Selecciona el idioma más común o en el que se presenta en la receta (ej. 'Parmesan' en inglés, 'Jalapeño' en español).&lt;/li&gt;&lt;/ul&gt;&lt;/span&gt;"/>
     </View>
   </View>
 
   <!-- Mensaje final -->
+  <!-- ===== FINAL SUCCESS MESSAGE ===== -->
   <View className="success">
-    <Header value="✨ ¡Último paso! Revisa que todos los ingredientes estén bien etiquetados y tengan sus atributos. ¡Gracias por tu ayuda! ✨" size="4"/>
+    <Header value="🎉 ¡Excelente trabajo! Revisa que todos los ingredientes tengan atributos consistentes y precisos. ¡Tu anotación está lista! 🎉"/>
   </View>
 </View>

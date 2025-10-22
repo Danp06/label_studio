@@ -1,101 +1,281 @@
 <View>
   <Style>
-    /* Main Headers - Centered, larger, prominent */
+    /* ===== MAIN LAYOUT Y COLORS ===== */
+    :root {
+      --primary-color: #2563eb;
+      --secondary-color: #059669;
+      --accent-color: #dc2626;
+      --warning-color: #d97706;
+      --success-color: #16a34a;
+      --info-color: #0891b2;
+      --light-bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+
+    /* ===== MAIN HEADERS ===== */
     .header-main {
-      color: #4CAF50;
-      font-weight: bold;
-      font-size: 2.2em; /* Increased from 1.5em */
-      margin-bottom: 20px; /* Increased margin */
-      text-align: center; /* Centered */
-      padding-top: 15px; /* Added padding */
-    }
-    /* Descriptive text below main header */
-    .description-text {
-      font-size: 1.1em; /* Slightly larger */
-      color: #555; /* Slightly darker for readability */
-      text-align: center; /* Centered */
-      margin-bottom: 20px; /* More space */
-    }
-    /* Step Headers - Clear, slightly larger */
-    .header-step {
-      color: #2196F3;
-      font-weight: bold;
-      font-size: 1.6em; /* Increased from 1.2em */
-      margin: 30px 0 15px; /* Increased margins */
-      border-bottom: 2px solid #e0e0e0; /* Added a subtle separator */
-      padding-bottom: 5px;
-      text-align: center; /* Centered text within the tip box */
-    }
-    /* Sub Headers - Distinct, slightly larger */
-    .header-sub {
-      color: #333;
-      font-weight: bold;
-      font-size: 1.2em; /* Increased from 1.1em */
-      margin-top: 25px; /* Increased margin */
-      margin-bottom: 10px;
-    }
-    /* Tips - More readable, slightly larger, more inviting */
-    .tip {
-      color: #555; /* Slightly darker for readability */
-      font-style: italic;
-      font-size: 1em; /* Increased from 0.9em */
-      padding: 15px; /* Increased padding */
-      background: #eef7ff; /* Lighter, more inviting background */
-      border-radius: 8px; /* More rounded corners */
-      margin: 15px 0; /* Increased margins */
-      border-left: 5px solid #2196F3; /* Accent border */
-    }
-    /* Success Message - More prominent */
-    .success {
-      color: #4CAF50;
-      font-weight: bold;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      font-weight: 700;
+      font-size: 2.5em;
+      margin: 0 0 15px 0;
       text-align: center;
-      padding: 20px; /* Increased padding */
-      background: #e8f5e9;
-      border-radius: 10px; /* More rounded corners */
-      margin: 30px 0; /* Increased margins */
-      font-size: 1.3em; /* Increased font size */
+      padding: 25px 20px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    /* Attributes Box - Keep functional, with slight aesthetic improvements */
+
+    .description-text {
+      font-size: 1.2em;
+      color: var(--text-secondary);
+      text-align: center;
+      margin: 0 0 30px 0;
+      padding: 15px 20px;
+      background: var(--light-bg);
+      border-radius: var(--radius-md);
+      border-left: 4px solid var(--primary-color);
+    }
+
+    /* ===== STEP HEADERS ===== */
+    .header-step {
+      background: linear-gradient(90deg, var(--primary-color), var(--info-color));
+      color: white;
+      font-weight: 600;
+      font-size: 1.8em;
+      margin: 40px 0 20px 0;
+      padding: 20px 25px;
+      border-radius: var(--radius-md);
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+
+    .header-step::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--warning-color), var(--accent-color));
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+    }
+
+    /* ===== SUB HEADERS ===== */
+    .header-sub {
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 1.3em;
+      margin: 25px 0 15px 0;
+      padding: 12px 16px;
+      background: var(--light-bg);
+      border-left: 4px solid var(--secondary-color);
+      border-radius: var(--radius-sm);
+    }
+
+    /* ===== TIPS & ADVICE ===== */
+    .tip {
+      background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+      color: var(--text-primary);
+      font-size: 1em;
+      padding: 20px;
+      border-radius: var(--radius-md);
+      margin: 20px 0;
+      border-left: 5px solid var(--info-color);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+
+    .tip::before {
+      content: '💡';
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 1.2em;
+    }
+
+    .tip span {
+      display: block;
+      line-height: 1.6;
+    }
+
+    .tip ul {
+      margin: 12px 0 0 0;
+      padding-left: 20px;
+    }
+
+    .tip li {
+      margin: 6px 0;
+      padding: 0;
+    }
+
+    .tip p {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ===== ATTRIBUTES BOXES ===== */
     .attributes-box {
-      background: #f9f9f9;
-      padding: 20px; /* Increased padding */
-      border-radius: 8px; /* More rounded corners */
-      margin: 15px 0; /* Increased margins */
-      border-left: 5px solid #2196F3; /* Thicker accent border */
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: var(--radius-lg);
+      margin: 20px 0;
+      border: 2px solid var(--border-color);
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
     }
-    /* Styles for choices to ensure consistent spacing */
+
+    .attributes-box:hover {
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-color);
+    }
+
+    /* ===== CHOICES CONTAINERS ===== */
     .choices-container {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: var(--light-bg);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    /* ===== SUCCESS MESSAGE ===== */
+    .success {
+      background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+      color: var(--success-color);
+      font-weight: 600;
+      text-align: center;
+      padding: 25px;
+      border-radius: var(--radius-lg);
+      margin: 40px 0;
+      font-size: 1.4em;
+      border: 2px solid var(--success-color);
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+
+    .success::before {
+      content: '✨';
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      font-size: 1.5em;
+    }
+
+    .success::after {
+      content: '✨';
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.5em;
+    }
+
+    /* ===== COLLAPSE PANELS ===== */
+    .collapse-panel {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      margin: 20px 0;
+    }
+
+    /* ===== LABEL COLORS ===== */
+    .label-ingrediente {
+      background: linear-gradient(135deg, #fef2f2, #fee2e2) !important;
+      border: 2px solid #fca5a5 !important;
+      color: #991b1b !important;
+    }
+
+    .label-plato {
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7) !important;
+      border: 2px solid #86efac !important;
+      color: #166534 !important;
+    }
+
+    .label-bebida {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe) !important;
+      border: 2px solid #93c5fd !important;
+      color: #1e40af !important;
+    }
+
+    .label-marca {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7) !important;
+      border: 2px solid #fcd34d !important;
+      color: #92400e !important;
+    }
+
+    /* ===== RESPONSIVE DESIGN ===== */
+    @media (max-width: 768px) {
+      .header-main {
+        font-size: 2em;
+        padding: 20px 15px;
+      }
+      
+      .header-step {
+        font-size: 1.5em;
+        padding: 15px 20px;
+      }
+      
+      .attributes-box {
+        padding: 20px 15px;
+      }
+    }
+
+    /* ===== ANIMATIONS ===== */
+    .attributes-box {
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </Style>
 
-  <!-- Main Header -->
-  <Header value="¡Bienvenido/a a Anotar Menús! 🍽️" className="header-main"/>
-  <Header value="Etiqueta platos, bebidas y más. Sigue los pasos, ¡es súper fácil! 😊" className="description-text"/>
+  <!-- ===== MAIN HEADER ===== -->
+  <Header value="🍽️ Anotación de Menús Inteligente 🍽️" className="header-main"/>
+  <Header value="Etiqueta platos, bebidas, ingredientes y marcas de forma precisa y eficiente. ¡Sigue los pasos y obtén resultados profesionales! 🚀" className="description-text"/>
 
-  <!-- Step 1: Review Menu -->
-  <Header value="Paso 1: Revisa el Menú" className="header-step"/>
+  <!-- ===== STEP 1: ENTITY LABELING ===== -->
+  <Header value="📝 Paso 1: Etiqueta las Entidades" className="header-step"/>
+  
   <View className="tip">
-    <HyperText name="step1_tip_text" value="&lt;span style='font-size: 0.9em;'&gt;💡 Consejo: Para una anotación precisa, selecciona la &lt;strong&gt;frase completa&lt;/strong&gt; que describe cada entidad (ej. 'Pizza Margarita' como PLATO, no solo 'Pizza').&amp;#10;Evita solapamientos y asegúrate de que cada entidad sea una unidad de información autónoma y completa.&lt;/span&gt;"/>
+    <HyperText name="step1_tip_text" value="&lt;span style='font-size: 1em; line-height: 1.6;'&gt;&lt;strong&gt;🎯 Instrucciones Clave:&lt;/strong&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Selecciona frases completas:&lt;/strong&gt; Etiqueta 'Pizza Margarita' como PLATO, no solo 'Pizza'.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Evita solapamientos:&lt;/strong&gt; Cada palabra debe pertenecer a una sola entidad.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Unidades completas:&lt;/strong&gt; Cada entidad debe ser una unidad de información autónoma.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Consistencia:&lt;/strong&gt; Mantén el mismo criterio para entidades similares.&lt;/li&gt;&lt;/ul&gt;&lt;/span&gt;"/>
   </View>
-  <View style="display: flex; flex-direction: column; gap: 10px;">
-    <HyperText name="text" value="Título: $label&lt;br/&gt;Descripción: $description&lt;br/&gt;Categoría: $category&lt;br/&gt;Categoría Principal: $main_category" granularity="word"/>
+
+  <View style="display: flex; flex-direction: column; gap: 15px; padding: 20px; background: var(--light-bg); border-radius: var(--radius-md); margin: 20px 0;">
+    <HyperText name="text" value="&lt;div style='background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'&gt;&lt;strong&gt;📋 Información del Menú:&lt;/strong&gt;&lt;br/&gt;&lt;strong&gt;Título:&lt;/strong&gt; $label&lt;br/&gt;&lt;strong&gt;Descripción:&lt;/strong&gt; $description&lt;br/&gt;&lt;strong&gt;Categoría:&lt;/strong&gt; $category&lt;br/&gt;&lt;strong&gt;Categoría Principal:&lt;/strong&gt; $main_category&lt;/div&gt;" granularity="word"/>
+    
     <Labels name="entities" toName="text" smart="true" showInline="true">
-      <Label value="INGREDIENTE" background="#FFB6B6"/>
-      <Label value="PLATO" background="#B2DFDB"/>
-      <Label value="BEBIDA" background="#BBDEFB"/>
-      <Label value="MARCA" background="#FFE0B2"/>
+      <Label value="INGREDIENTE" background="#FFB6B6" className="label-ingrediente"/>
+      <Label value="PLATO" background="#B2DFDB" className="label-plato"/>
+      <Label value="BEBIDA" background="#BBDEFB" className="label-bebida"/>
+      <Label value="MARCA" background="#FFE0B2" className="label-marca"/>
     </Labels>
   </View>
 
-  <!-- Step 2: Add Attributes to Entities -->
-  <Header value="Paso 2: Agrega Atributos a las Entidades" className="header-step"/>
+  <!-- ===== STEP 2: ATTRIBUTES ===== -->
+  <Header value="⚙️ Paso 2: Agrega Atributos Específicos" className="header-step"/>
 
-  <!-- Attributes for PLATO -->
+  <!-- PLATO Attributes -->
   <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="PLATO" className="attributes-box">
-    <Header value="⚙️ Atributos para PLATO:" className="header-sub"/>
+    <Header value="🍽️ Atributos para PLATO" className="header-sub"/>
+    
     <Header value="Tipo de Plato" className="header-sub"/>
     <Choices name="course_type" toName="text" perRegion="true" choice="single" showInline="true" className="choices-container">
       <Choice value="Entrante"/>
@@ -103,19 +283,22 @@
       <Choice value="Acompañamiento"/>
       <Choice value="Postre"/>
     </Choices>
+    
     <View className="tip">
-      <HyperText name="plato_type_tip_text" value="&lt;span style='font-size: 0.9em;'&gt;💡 Consejo: Clasifica el plato según su función en la comida.&amp;#10;'Entrante' para aperitivos o platos ligeros.&amp;#10;'Plato Principal' para el plato fuerte o central.&amp;#10;'Acompañamiento' para guarniciones.&amp;#10;'Postre' para dulces o frutas al final de la comida.&lt;/span&gt;"/>
+      <HyperText name="plato_type_tip_text" value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🍽️ Clasificación de Platos:&lt;/strong&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Entrante:&lt;/strong&gt; Aperitivos, ensaladas, sopas ligeras&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Plato Principal:&lt;/strong&gt; El plato fuerte y central de la comida&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Acompañamiento:&lt;/strong&gt; Guarniciones, arroces, papas&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Postre:&lt;/strong&gt; Dulces, frutas, helados&lt;/li&gt;&lt;/ul&gt;&lt;/span&gt;"/>
     </View>
   </View>
 
-  <!-- Attributes for BEBIDA -->
+  <!-- BEBIDA Attributes -->
   <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="BEBIDA" className="attributes-box">
-    <Header value="⚙️ Atributos para BEBIDA:" className="header-sub"/>
+    <Header value="🥤 Atributos para BEBIDA" className="header-sub"/>
+    
     <Header value="Tipo de Bebida" className="header-sub"/>
     <Choices name="beverage_type" toName="text" perRegion="true" choice="single" showInline="true" className="choices-container">
       <Choice value="Alcohólica"/>
       <Choice value="No Alcohólica"/>
     </Choices>
+    
     <Header value="Categoría de Bebida" className="header-sub"/>
     <Choices name="beverage_category" toName="text" perRegion="true" choice="single" showInline="true" className="choices-container">
       <Choice value="Destilados"/>
@@ -125,16 +308,19 @@
       <Choice value="Gaseosas"/>
       <Choice value="Jugos y Bebidas Naturales"/>
       <Choice value="Café o Té"/>
+      <Choice value="Agua"/>
       <Choice value="Otro"/>
     </Choices>
+    
     <View className="tip">
-      <HyperText name="bebida_type_category_tip_text" value="&lt;span style='font-size: 0.9em;'&gt;💡 Consejo: Primero, define el 'Tipo de Bebida' (Alcohólica/No Alcohólica).&amp;#10;Luego, elige la 'Categoría de Bebida' más específica:&amp;#10;'Gaseosas' (ej. Coca-Cola), 'Jugos y Bebidas Naturales' (ej. zumos), 'Café o Té' (ej. espresso).&amp;#10;Usa 'Otro' para opciones como agua, leche o bebidas no listadas.&lt;/span&gt;"/>
+      <HyperText name="bebida_type_category_tip_text" value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🥤 Clasificación de Bebidas:&lt;/strong&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Primero:&lt;/strong&gt; Define si es Alcohólica o No Alcohólica&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Segundo:&lt;/strong&gt; Elige la categoría específica&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Ejemplos:&lt;/strong&gt; Coca-Cola → No Alcohólica + Gaseosas&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Ejemplos:&lt;/strong&gt; Vino Tinto → Alcohólica + Vinos&lt;/li&gt;&lt;/ul&gt;&lt;/span&gt;"/>
     </View>
   </View>
 
-  <!-- Attributes for INGREDIENTE -->
+  <!-- INGREDIENTE Attributes -->
   <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="INGREDIENTE" className="attributes-box">
-    <Header value="⚙️ Atributos para INGREDIENTE:" className="header-sub"/>
+    <Header value="🥕 Atributos para INGREDIENTE" className="header-sub"/>
+    
     <Header value="Método de Cocción" className="header-sub"/>
     <Choices name="cooking_method" toName="text" perRegion="true" choice="multiple" showInline="true" className="choices-container">
       <Choice value="Asado"/>
@@ -149,6 +335,7 @@
       <Choice value="Salteado"/>
       <Choice value="No Aplica"/>
     </Choices>
+    
     <Header value="Estado de Preparación" className="header-sub"/>
     <Choices name="preparation_state" toName="text" perRegion="true" choice="single" showInline="true" className="choices-container">
       <Choice value="Crudo"/>
@@ -157,32 +344,37 @@
       <Choice value="Mezclado"/>
       <Choice value="Fresco"/>
       <Choice value="Congelado"/>
+      <Choice value="Seco"/>
       <Choice value="No Aplica"/>
     </Choices>
+    
     <View className="tip">
-      <HyperText name="ingrediente_cooking_prep_tip_text" value="&lt;span style='font-size: 0.9em;'&gt;💡 Consejo: Para ingredientes, selecciona el 'Estado de Preparación' (ej. 'Fresco' para un tomate) y el 'Método de Cocción' (ej. 'Crudo' si no se cocina).&amp;#10;&amp;#10;Puedes elegir múltiples métodos (ej. 'Frito' y 'Ahumado').&amp;#10;Usa 'No Aplica' si el atributo no es relevante (ej. para agua) o si la información no está en el menú.&lt;/span&gt;"/>
+      <HyperText name="ingrediente_cooking_prep_tip_text" value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🥕 Clasificación de Ingredientes:&lt;/strong&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Estado de Preparación:&lt;/strong&gt; Cómo está el ingrediente (Fresco, Cocido, Procesado)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Método de Cocción:&lt;/strong&gt; Cómo se cocina (puedes elegir múltiples)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Ejemplos:&lt;/strong&gt; Tomate → Fresco + Crudo&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Ejemplos:&lt;/strong&gt; Pollo → Cocido + Asado + A la Plancha&lt;/li&gt;&lt;/ul&gt;&lt;/span&gt;"/>
     </View>
   </View>
 
-  <!-- Attributes for MARCA -->
+  <!-- MARCA Attributes -->
   <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="MARCA" className="attributes-box">
-    <Header value="⚙️ Atributos para MARCA:" className="header-sub"/>
+    <Header value="🏷️ Atributos para MARCA" className="header-sub"/>
+    
     <Header value="Tipo de Marca" className="header-sub"/>
     <Choices name="brand_type" toName="text" perRegion="true" choice="single" showInline="true" className="choices-container">
       <Choice value="Marca de Comida"/>
       <Choice value="Marca de Bebida"/>
       <Choice value="Marca de Producto"/>
     </Choices>
+    
     <View className="tip">
-      <HyperText name="marca_type_tip_text" value="&lt;span style='font-size: 0.9em;'&gt;💡 Consejo: Clasifica la marca por su producto principal.&amp;#10;'Marca de Comida' para alimentos (ej. 'Nestlé').&amp;#10;'Marca de Bebida' para bebidas (ej. 'Coca-Cola').&amp;#10;Usa 'Marca de Producto' para ingredientes o artículos no consumibles directamente como comida o bebida (ej. 'Aceite de Oliva Carbonell', 'Salsa Tabasco').&lt;/span&gt;"/>
+      <HyperText name="marca_type_tip_text" value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🏷️ Clasificación de Marcas:&lt;/strong&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Marca de Comida:&lt;/strong&gt; Nestlé, Kellogg's, productos alimenticios&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Marca de Bebida:&lt;/strong&gt; Coca-Cola, Pepsi, marcas de bebidas&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Marca de Producto:&lt;/strong&gt; Aceites, salsas, condimentos&lt;/li&gt;&lt;/ul&gt;&lt;/span&gt;"/>
     </View>
   </View>
 
-  <!-- Step 3: Complete Metadata -->
-  <Header value="Paso 3: Completa los Metadatos" className="header-step"/>
-  <Collapse accordion="true">
-    <Panel value="📋 Metadatos del Menú">
-      <View style="padding: 15px;">
+  <!-- ===== STEP 3: METADATA ===== -->
+  <Header value="📊 Paso 3: Metadatos del Menú" className="header-step"/>
+  
+  <Collapse accordion="true" className="collapse-panel">
+    <Panel value="🌍 Información General del Menú">
+      <View style="padding: 25px;">
         <Header value="Cocina de Origen" className="header-sub"/>
         <Choices name="origin_cuisine" toName="text" choice="multiple" showInline="true" required="true" className="choices-container">
           <Choice value="Italiana"/>
@@ -194,12 +386,16 @@
           <Choice value="Argentina"/>
           <Choice value="Española"/>
           <Choice value="Asiática"/>
+          <Choice value="Mediterránea"/>
+          <Choice value="Americana"/>
           <Choice value="Fusión"/>
           <Choice value="Otra"/>
         </Choices>
+        
         <View className="tip">
-          <HyperText name="metadata_cuisine_tip_text" value="&lt;span style='font-size: 0.9em;'&gt;💡 Consejo: Identifica la cocina principal del menú basándote en sus platos e ingredientes (ej. 'Pasta' → Italiana, 'Tacos' → Mexicana).&amp;#10;&amp;#10;Selecciona múltiples opciones si es una cocina de fusión, o 'Otra' si no está en la lista, es muy específica o desconocida.&lt;/span&gt;"/>
+          <HyperText name="metadata_cuisine_tip_text" value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🌍 Identificación de Cocina:&lt;/strong&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Basado en platos:&lt;/strong&gt; Pasta → Italiana, Tacos → Mexicana&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Múltiples opciones:&lt;/strong&gt; Para cocinas de fusión&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Ingredientes clave:&lt;/strong&gt; Soya → Asiática, Aceite de Oliva → Mediterránea&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Usa 'Otra':&lt;/strong&gt; Para cocinas específicas o desconocidas&lt;/li&gt;&lt;/ul&gt;&lt;/span&gt;"/>
         </View>
+        
         <Header value="Idioma del Menú" className="header-sub"/>
         <Choices name="language" toName="text" choice="single" showInline="true" required="true" className="choices-container">
           <Choice value="Español"/>
@@ -207,14 +403,16 @@
           <Choice value="Portugués"/>
           <Choice value="Francés"/>
           <Choice value="Italiano"/>
+          <Choice value="Japonés"/>
+          <Choice value="Chino"/>
           <Choice value="Otro"/>
         </Choices>
       </View>
     </Panel>
   </Collapse>
 
-  <!-- Final Message -->
+  <!-- ===== FINAL SUCCESS MESSAGE ===== -->
   <View className="success">
-    <Header value="✨ ¡Último paso! Revisa que todas las entidades tengan atributos correctos y consistentes. ¡Lo hiciste genial! ✨"/>
+    <Header value="🎉 ¡Excelente trabajo! Revisa que todas las entidades tengan atributos consistentes y precisos. ¡Tu anotación está lista! 🎉"/>
   </View>
 </View>
