@@ -15,7 +15,7 @@
   <!-- Step 1: Review Menu -->
   <Header value="Paso 1: Revisa el Menú" className="header-step"/>
   <View className="tip">
-    <Header value="💡 Consejo: Selecciona solo las palabras exactas que representen la entidad completa (ej. 'Pizza Margherita' como PLATO, no solo 'Pizza'). Evita solapamientos y asegúrate de que cada entidad sea independiente." size="5"/>
+    <Header value="💡 Consejo: Para una anotación precisa, selecciona la *frase completa* que describe cada entidad (ej. 'Pizza Margarita' como PLATO, no solo 'Pizza'). Evita solapamientos y asegúrate de que cada entidad sea una unidad de información autónoma y completa." size="5"/>
   </View>
   <View style="display: flex; flex-direction: column; gap: 10px;">
     <Text name="text" value="Título: $label&#10;Descripción: $description&#10;Categoría: $category&#10;Categoría Principal: $main_category" granularity="word"/>
@@ -41,7 +41,7 @@
       <Choice value="Postre"/>
     </Choices>
     <View className="tip">
-      <Header value="💡 Consejo: Basado en el contexto del menú, elige el tipo que mejor encaje. Por ejemplo, usa 'Entrante' para aperitivos ligeros y 'Plato Principal' para platos fuertes." size="5"/>
+      <Header value="💡 Consejo: Clasifica el plato según su función en la comida. 'Entrante' para aperitivos o platos ligeros. 'Plato Principal' para el plato fuerte o central. 'Acompañamiento' para guarniciones. 'Postre' para dulces o frutas al final de la comida." size="5"/>
     </View>
   </View>
 
@@ -65,7 +65,7 @@
       <Choice value="Otro"/>
     </Choices>
     <View className="tip">
-      <Header value="💡 Consejo: Usa 'Tipo de Bebida' para clasificar si es alcohólica o no (ej. 'Cerveza' → Alcohólica). Para 'Categoría', elige la más específica: 'Gaseosas' para bebidas carbonatadas comerciales (ej. 'Coca-Cola'), 'Jugos y Bebidas Naturales' para jugos frescos o smoothies (ej. 'Jugo de naranja'), 'Café o Té' para infusiones (ej. 'Capuchino'). Usa 'Otro' para casos como agua pura." size="5"/>
+      <Header value="💡 Consejo: Primero, define el 'Tipo de Bebida' (Alcohólica/No Alcohólica). Luego, elige la 'Categoría de Bebida' más específica: 'Gaseosas' (ej. Coca-Cola), 'Jugos y Bebidas Naturales' (ej. zumos), 'Café o Té' (ej. espresso). Usa 'Otro' para opciones como agua, leche o bebidas no listadas." size="5"/>
     </View>
   </View>
 
@@ -97,7 +97,7 @@
       <Choice value="No Aplica"/>
     </Choices>
     <View className="tip">
-      <Header value="💡 Consejo: Para ingredientes como 'tomate fresco', elige 'Fresco' en Estado y 'Crudo' en Método si no se cocina. Selecciona múltiples métodos si aplica (ej. 'Frito' y 'Ahumado'). Usa 'No Aplica' para estados únicos." size="5"/>
+      <Header value="💡 Consejo: Para ingredientes, selecciona el 'Estado de Preparación' (ej. 'Fresco' para un tomate) y el 'Método de Cocción' (ej. 'Crudo' si no se cocina). Puedes elegir múltiples métodos (ej. 'Frito' y 'Ahumado'). Usa 'No Aplica' si el atributo no es relevante (ej. para agua) o si la información no está en el menú." size="5"/>
     </View>
   </View>
 
@@ -111,7 +111,7 @@
       <Choice value="Marca de Producto"/>
     </Choices>
     <View className="tip">
-      <Header value="💡 Consejo: Elige 'Marca de Comida' para marcas como 'Nestlé' en alimentos, 'Marca de Bebida' para 'Coca-Cola'. Usa 'Marca de Producto' para marcas no estándar y describe su categoría." size="5"/>
+      <Header value="💡 Consejo: Clasifica la marca por su producto principal. 'Marca de Comida' para alimentos (ej. 'Nestlé'), 'Marca de Bebida' para bebidas (ej. 'Coca-Cola'). Usa 'Marca de Producto' para ingredientes o artículos no consumibles directamente como comida o bebida (ej. 'Aceite de Oliva Carbonell', 'Salsa Tabasco')." size="5"/>
     </View>
   </View>
 
@@ -135,7 +135,7 @@
           <Choice value="Otra"/>
         </Choices>
         <View className="tip">
-          <Header value="💡 Consejo: Identifica el tipo de menú revisando platos e ingredientes (ej. 'Pasta' sugiere Italiana). Selecciona múltiples si es fusión, o 'Otra' para cocinas no listadas." size="5"/>
+          <Header value="💡 Consejo: Identifica la cocina principal del menú basándote en sus platos e ingredientes (ej. 'Pasta' → Italiana, 'Tacos' → Mexicana). Selecciona múltiples opciones si es una cocina de fusión, o 'Otra' si no está en la lista, es muy específica o desconocida." size="5"/>
         </View>
         <Header value="Idioma del Menú" size="5" className="header-sub"/>
         <Choices name="language" toName="text" choice="single" showInline="true" required="true">

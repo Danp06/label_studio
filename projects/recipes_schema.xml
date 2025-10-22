@@ -4,7 +4,7 @@
     .header-step { color: #2196F3; font-weight: bold; font-size: 1.2em; margin: 20px 0 10px; }
     .header-sub { color: #333; font-weight: bold; font-size: 1.1em; margin-top: 15px; }
     .tip { color: #666; font-style: italic; font-size: 0.9em; padding: 10px; background: #f5f5f5; border-radius: 4px; margin: 10px 0; }
-    .success { color: #4CAF50; font-weight: bold; text-align: center; padding: 15px; background: #e8f5e9; border-radius: 8px; margin: 20px 0; }
+    .success { color: #4CAF50; font-weight: bold; text-align: center; padding: 15px; background: #e8f5f9; border-radius: 8px; margin: 20px 0; }
     .attributes-box { background: #f9f9f9; padding: 15px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #2196F3; }
   </Style>
 
@@ -15,7 +15,7 @@
   <!-- Paso 1: Revisa la receta -->
   <Header value="Paso 1: Revisa la Receta" className="header-step"/>
   <View className="tip">
-    <Header value="💡 Consejo: Selecciona solo las palabras exactas que representen el *ingrediente completo* (por ejemplo, 'queso parmesano rallado'). Evita incluir instrucciones de preparación o cantidades." size="5"/>
+    <Header value="💡 Consejo: Etiqueta la frase completa que describe el *ingrediente* (ej. 'queso parmesano'). No incluyas cantidades (ej. '200g') ni instrucciones de preparación (ej. 'picado')." size="5"/>
   </View>
   <View style="display: flex; flex-direction: column; gap: 10px;">
     <Text name="sentence" value="$sentence" granularity="word"/>
@@ -43,6 +43,9 @@
       <Choice value="Salteado"/>
       <Choice value="No Aplica"/>
     </Choices>
+    <View className="tip">
+      <Header value="💡 Consejo: Selecciona el método principal de cocción del ingrediente. Si no se cocina o la información no está disponible, elige 'No Aplica'. Puedes seleccionar múltiples si es relevante (ej. 'Asado' y 'Ahumado')." size="5"/>
+    </View>
 
     <Header value="Estado de Preparación" size="5" className="header-sub"/>
     <Choices name="preparation_state" toName="sentence" perRegion="true" choice="single" showInline="true">
@@ -54,6 +57,9 @@
       <Choice value="Congelado"/>
       <Choice value="No Aplica"/>
     </Choices>
+    <View className="tip">
+      <Header value="💡 Consejo: Describe el estado del ingrediente antes de su uso en la receta (ej. 'Fresco' para hierbas, 'Procesado' para salsas). Si no aplica o no está claro, selecciona 'No Aplica'." size="5"/>
+    </View>
 
     <Header value="Cocina de Origen del Ingrediente" size="5" className="header-sub"/>
     <Choices name="ingredient_origin_cuisine" toName="sentence" perRegion="true" choice="multiple" showInline="true" required="true">
@@ -70,7 +76,7 @@
       <Choice value="Otra"/>
     </Choices>
     <View className="tip">
-      <Header value="💡 Consejo: Identifica el origen cultural del ingrediente (ej. 'Pasta' sugiere Italiana). Selecciona múltiples si es fusión, o 'Otra' para cocinas no listadas." size="5"/>
+      <Header value="💡 Consejo: Identifica la cocina de origen principal del ingrediente (ej. 'Pasta' para Italiana, 'Wasabi' para Japonesa). Selecciona múltiples si es una fusión o 'Otra' si no está en la lista." size="5"/>
     </View>
 
     <Header value="Idioma del Ingrediente" size="5" className="header-sub"/>
@@ -83,11 +89,7 @@
       <Choice value="Otro"/>
     </Choices>
     <View className="tip">
-      <Header value="💡 Consejo: Elige el idioma en el que el ingrediente es comúnmente conocido o presentado en la receta." size="5"/>
-    </View>
-
-    <View className="tip">
-      <Header value="💡 Consejo: Para 'tomate fresco', elige 'Fresco' en Estado y 'Crudo' en Método si no tiene cocción. Puedes seleccionar múltiples métodos si es necesario. Usa 'No Aplica' si no corresponde. Además, especifica la cocina de origen y el idioma del ingrediente si aplica." size="5"/>
+      <Header value="💡 Consejo: Selecciona el idioma en el que el ingrediente es más conocido o se presenta en la receta (ej. 'Parmesan' en inglés, 'Jalapeño' en español)." size="5"/>
     </View>
   </View>
 
