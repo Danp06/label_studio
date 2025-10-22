@@ -78,6 +78,7 @@
       background: var(--light-bg);
       border-left: 4px solid var(--secondary-color);
       border-radius: var(--radius-sm);
+      text-align: center; /* Added to center sub-headers */
     }
     .instruction-box {
       background: linear-gradient(135deg, #fffbeb, #fef3c7);
@@ -243,7 +244,7 @@
   </View>
 
   <View style="display: flex; flex-direction: column; gap: 15px; padding: 20px; background: var(--light-bg); border-radius: var(--radius-md); margin: 20px auto; max-width: 900px; box-sizing: border-box;">
-    <HyperText name="text" value="&lt;div style='background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'&gt;&lt;strong&gt;📋 Información de la Receta:&lt;/strong&gt;&lt;br/&gt;&lt;strong&gt;Título:&lt;/strong&gt; $label&lt;br/&gt;&lt;strong&gt;Descripción:&lt;/strong&gt; $description&lt;br/&gt;&lt;strong&gt;Categoría:&lt;/strong&gt; $category&lt;br/&gt;&lt;strong&gt;Categoría Principal:&lt;/strong&gt; $main_category&lt;/div&gt;" granularity="word"/>
+    <HyperText name="text" value="&lt;div style='background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'&gt;&lt;strong&gt;📋 Información de la Receta:&lt;/strong&gt;&lt;br/&gt;&lt;strong&gt;Descripción:&lt;/strong&gt; $sentence&lt;/div&gt;" granularity="word"/>
 
     <Labels name="entities" toName="text" smart="true" showInline="true">
       <Label value="INGREDIENTE" background="#FFB6B6" className="label-ingrediente"/>

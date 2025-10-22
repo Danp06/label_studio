@@ -78,6 +78,7 @@
       background: var(--light-bg);
       border-left: 4px solid var(--secondary-color);
       border-radius: var(--radius-sm);
+      text-align: center; /* Added to center sub-headers */
     }
     .instruction-box {
       background: linear-gradient(135deg, #fffbeb, #fef3c7);
