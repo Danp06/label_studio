@@ -1,24 +1,87 @@
 <View>
   <Style>
-    .header-main { color: #4CAF50; font-weight: bold; font-size: 1.5em; margin-bottom: 10px; }
-    .header-step { color: #2196F3; font-weight: bold; font-size: 1.2em; margin: 20px 0 10px; }
-    .header-sub { color: #333; font-weight: bold; font-size: 1.1em; margin-top: 15px; }
-    .tip { color: #666; font-style: italic; font-size: 0.9em; padding: 10px; background: #f5f5f5; border-radius: 4px; margin: 10px 0; }
-    .success { color: #4CAF50; font-weight: bold; text-align: center; padding: 15px; background: #e8f5e9; border-radius: 8px; margin: 20px 0; }
-    .attributes-box { background: #f9f9f9; padding: 15px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #2196F3; }
+    /* Main Headers - Centered, larger, prominent */
+    .header-main {
+      color: #4CAF50;
+      font-weight: bold;
+      font-size: 2.2em; /* Increased from 1.5em */
+      margin-bottom: 20px; /* Increased margin */
+      text-align: center; /* Centered */
+      padding-top: 15px; /* Added padding */
+    }
+    /* Descriptive text below main header */
+    .description-text {
+      font-size: 1.1em; /* Slightly larger */
+      color: #555; /* Slightly darker for readability */
+      text-align: center; /* Centered */
+      margin-bottom: 20px; /* More space */
+    }
+    /* Step Headers - Clear, slightly larger */
+    .header-step {
+      color: #2196F3;
+      font-weight: bold;
+      font-size: 1.6em; /* Increased from 1.2em */
+      margin: 30px 0 15px; /* Increased margins */
+      border-bottom: 2px solid #e0e0e0; /* Added a subtle separator */
+      padding-bottom: 5px;
+      text-align: center; /* Centered text within the tip box */
+    }
+    /* Sub Headers - Distinct, slightly larger */
+    .header-sub {
+      color: #333;
+      font-weight: bold;
+      font-size: 1.2em; /* Increased from 1.1em */
+      margin-top: 25px; /* Increased margin */
+      margin-bottom: 10px;
+    }
+    /* Tips - More readable, slightly larger, more inviting */
+    .tip {
+      color: #555; /* Slightly darker for readability */
+      font-style: italic;
+      font-size: 1em; /* Increased from 0.9em */
+      padding: 15px; /* Increased padding */
+      background: #eef7ff; /* Lighter, more inviting background */
+      border-radius: 8px; /* More rounded corners */
+      margin: 15px 0; /* Increased margins */
+      border-left: 5px solid #2196F3; /* Accent border */
+    }
+    /* Success Message - More prominent */
+    .success {
+      color: #4CAF50;
+      font-weight: bold;
+      text-align: center;
+      padding: 20px; /* Increased padding */
+      background: #e8f5e9;
+      border-radius: 10px; /* More rounded corners */
+      margin: 30px 0; /* Increased margins */
+      font-size: 1.3em; /* Increased font size */
+    }
+    /* Attributes Box - Keep functional, with slight aesthetic improvements */
+    .attributes-box {
+      background: #f9f9f9;
+      padding: 20px; /* Increased padding */
+      border-radius: 8px; /* More rounded corners */
+      margin: 15px 0; /* Increased margins */
+      border-left: 5px solid #2196F3; /* Thicker accent border */
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+    }
+    /* Styles for choices to ensure consistent spacing */
+    .choices-container {
+      margin-bottom: 15px;
+    }
   </Style>
 
   <!-- Main Header -->
   <Header value="¡Bienvenido/a a Anotar Menús! 🍽️" className="header-main"/>
-  <Header value="Etiqueta platos, bebidas y más. Sigue los pasos, ¡es súper fácil! 😊" size="4" style="color: #666;"/>
+  <Header value="Etiqueta platos, bebidas y más. Sigue los pasos, ¡es súper fácil! 😊" className="description-text"/>
 
   <!-- Step 1: Review Menu -->
   <Header value="Paso 1: Revisa el Menú" className="header-step"/>
   <View className="tip">
-    <Header value="💡 Consejo: Para una anotación precisa, selecciona la *frase completa* que describe cada entidad (ej. 'Pizza Margarita' como PLATO, no solo 'Pizza'). Evita solapamientos y asegúrate de que cada entidad sea una unidad de información autónoma y completa." size="5"/>
+    <HyperText name="step1_tip_text" value="&lt;span style='font-size: 0.9em;'&gt;💡 Consejo: Para una anotación precisa, selecciona la &lt;strong&gt;frase completa&lt;/strong&gt; que describe cada entidad (ej. 'Pizza Margarita' como PLATO, no solo 'Pizza').&amp;#10;Evita solapamientos y asegúrate de que cada entidad sea una unidad de información autónoma y completa.&lt;/span&gt;"/>
   </View>
   <View style="display: flex; flex-direction: column; gap: 10px;">
-    <Text name="text" value="Título: $label&#10;Descripción: $description&#10;Categoría: $category&#10;Categoría Principal: $main_category" granularity="word"/>
+    <HyperText name="text" value="Título: $label&lt;br/&gt;Descripción: $description&lt;br/&gt;Categoría: $category&lt;br/&gt;Categoría Principal: $main_category" granularity="word"/>
     <Labels name="entities" toName="text" smart="true" showInline="true">
       <Label value="INGREDIENTE" background="#FFB6B6"/>
       <Label value="PLATO" background="#B2DFDB"/>
@@ -33,28 +96,28 @@
   <!-- Attributes for PLATO -->
   <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="PLATO" className="attributes-box">
     <Header value="⚙️ Atributos para PLATO:" className="header-sub"/>
-    <Header value="Tipo de Plato" size="5" className="header-sub"/>
-    <Choices name="course_type" toName="text" perRegion="true" choice="single" showInline="true">
+    <Header value="Tipo de Plato" className="header-sub"/>
+    <Choices name="course_type" toName="text" perRegion="true" choice="single" showInline="true" className="choices-container">
       <Choice value="Entrante"/>
       <Choice value="Plato Principal"/>
       <Choice value="Acompañamiento"/>
       <Choice value="Postre"/>
     </Choices>
     <View className="tip">
-      <Header value="💡 Consejo: Clasifica el plato según su función en la comida. 'Entrante' para aperitivos o platos ligeros. 'Plato Principal' para el plato fuerte o central. 'Acompañamiento' para guarniciones. 'Postre' para dulces o frutas al final de la comida." size="5"/>
+      <HyperText name="plato_type_tip_text" value="&lt;span style='font-size: 0.9em;'&gt;💡 Consejo: Clasifica el plato según su función en la comida.&amp;#10;'Entrante' para aperitivos o platos ligeros.&amp;#10;'Plato Principal' para el plato fuerte o central.&amp;#10;'Acompañamiento' para guarniciones.&amp;#10;'Postre' para dulces o frutas al final de la comida.&lt;/span&gt;"/>
     </View>
   </View>
 
   <!-- Attributes for BEBIDA -->
   <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="BEBIDA" className="attributes-box">
     <Header value="⚙️ Atributos para BEBIDA:" className="header-sub"/>
-    <Header value="Tipo de Bebida" size="5" className="header-sub"/>
-    <Choices name="beverage_type" toName="text" perRegion="true" choice="single" showInline="true">
+    <Header value="Tipo de Bebida" className="header-sub"/>
+    <Choices name="beverage_type" toName="text" perRegion="true" choice="single" showInline="true" className="choices-container">
       <Choice value="Alcohólica"/>
       <Choice value="No Alcohólica"/>
     </Choices>
-    <Header value="Categoría de Bebida" size="5" className="header-sub"/>
-    <Choices name="beverage_category" toName="text" perRegion="true" choice="single" showInline="true">
+    <Header value="Categoría de Bebida" className="header-sub"/>
+    <Choices name="beverage_category" toName="text" perRegion="true" choice="single" showInline="true" className="choices-container">
       <Choice value="Destilados"/>
       <Choice value="Vinos"/>
       <Choice value="Cervezas"/>
@@ -65,15 +128,15 @@
       <Choice value="Otro"/>
     </Choices>
     <View className="tip">
-      <Header value="💡 Consejo: Primero, define el 'Tipo de Bebida' (Alcohólica/No Alcohólica). Luego, elige la 'Categoría de Bebida' más específica: 'Gaseosas' (ej. Coca-Cola), 'Jugos y Bebidas Naturales' (ej. zumos), 'Café o Té' (ej. espresso). Usa 'Otro' para opciones como agua, leche o bebidas no listadas." size="5"/>
+      <HyperText name="bebida_type_category_tip_text" value="&lt;span style='font-size: 0.9em;'&gt;💡 Consejo: Primero, define el 'Tipo de Bebida' (Alcohólica/No Alcohólica).&amp;#10;Luego, elige la 'Categoría de Bebida' más específica:&amp;#10;'Gaseosas' (ej. Coca-Cola), 'Jugos y Bebidas Naturales' (ej. zumos), 'Café o Té' (ej. espresso).&amp;#10;Usa 'Otro' para opciones como agua, leche o bebidas no listadas.&lt;/span&gt;"/>
     </View>
   </View>
 
   <!-- Attributes for INGREDIENTE -->
   <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="INGREDIENTE" className="attributes-box">
     <Header value="⚙️ Atributos para INGREDIENTE:" className="header-sub"/>
-    <Header value="Método de Cocción" size="5" className="header-sub"/>
-    <Choices name="cooking_method" toName="text" perRegion="true" choice="multiple" showInline="true">
+    <Header value="Método de Cocción" className="header-sub"/>
+    <Choices name="cooking_method" toName="text" perRegion="true" choice="multiple" showInline="true" className="choices-container">
       <Choice value="Asado"/>
       <Choice value="Frito"/>
       <Choice value="Hervido"/>
@@ -86,8 +149,8 @@
       <Choice value="Salteado"/>
       <Choice value="No Aplica"/>
     </Choices>
-    <Header value="Estado de Preparación" size="5" className="header-sub"/>
-    <Choices name="preparation_state" toName="text" perRegion="true" choice="single" showInline="true">
+    <Header value="Estado de Preparación" className="header-sub"/>
+    <Choices name="preparation_state" toName="text" perRegion="true" choice="single" showInline="true" className="choices-container">
       <Choice value="Crudo"/>
       <Choice value="Cocido"/>
       <Choice value="Procesado"/>
@@ -97,21 +160,21 @@
       <Choice value="No Aplica"/>
     </Choices>
     <View className="tip">
-      <Header value="💡 Consejo: Para ingredientes, selecciona el 'Estado de Preparación' (ej. 'Fresco' para un tomate) y el 'Método de Cocción' (ej. 'Crudo' si no se cocina). Puedes elegir múltiples métodos (ej. 'Frito' y 'Ahumado'). Usa 'No Aplica' si el atributo no es relevante (ej. para agua) o si la información no está en el menú." size="5"/>
+      <HyperText name="ingrediente_cooking_prep_tip_text" value="&lt;span style='font-size: 0.9em;'&gt;💡 Consejo: Para ingredientes, selecciona el 'Estado de Preparación' (ej. 'Fresco' para un tomate) y el 'Método de Cocción' (ej. 'Crudo' si no se cocina).&amp;#10;&amp;#10;Puedes elegir múltiples métodos (ej. 'Frito' y 'Ahumado').&amp;#10;Usa 'No Aplica' si el atributo no es relevante (ej. para agua) o si la información no está en el menú.&lt;/span&gt;"/>
     </View>
   </View>
 
   <!-- Attributes for MARCA -->
   <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="MARCA" className="attributes-box">
     <Header value="⚙️ Atributos para MARCA:" className="header-sub"/>
-    <Header value="Tipo de Marca" size="5" className="header-sub"/>
-    <Choices name="brand_type" toName="text" perRegion="true" choice="single" showInline="true">
+    <Header value="Tipo de Marca" className="header-sub"/>
+    <Choices name="brand_type" toName="text" perRegion="true" choice="single" showInline="true" className="choices-container">
       <Choice value="Marca de Comida"/>
       <Choice value="Marca de Bebida"/>
       <Choice value="Marca de Producto"/>
     </Choices>
     <View className="tip">
-      <Header value="💡 Consejo: Clasifica la marca por su producto principal. 'Marca de Comida' para alimentos (ej. 'Nestlé'), 'Marca de Bebida' para bebidas (ej. 'Coca-Cola'). Usa 'Marca de Producto' para ingredientes o artículos no consumibles directamente como comida o bebida (ej. 'Aceite de Oliva Carbonell', 'Salsa Tabasco')." size="5"/>
+      <HyperText name="marca_type_tip_text" value="&lt;span style='font-size: 0.9em;'&gt;💡 Consejo: Clasifica la marca por su producto principal.&amp;#10;'Marca de Comida' para alimentos (ej. 'Nestlé').&amp;#10;'Marca de Bebida' para bebidas (ej. 'Coca-Cola').&amp;#10;Usa 'Marca de Producto' para ingredientes o artículos no consumibles directamente como comida o bebida (ej. 'Aceite de Oliva Carbonell', 'Salsa Tabasco').&lt;/span&gt;"/>
     </View>
   </View>
 
@@ -120,8 +183,8 @@
   <Collapse accordion="true">
     <Panel value="📋 Metadatos del Menú">
       <View style="padding: 15px;">
-        <Header value="Cocina de Origen" size="5" className="header-sub"/>
-        <Choices name="origin_cuisine" toName="text" choice="multiple" showInline="true" required="true">
+        <Header value="Cocina de Origen" className="header-sub"/>
+        <Choices name="origin_cuisine" toName="text" choice="multiple" showInline="true" required="true" className="choices-container">
           <Choice value="Italiana"/>
           <Choice value="Peruana"/>
           <Choice value="Japonesa"/>
@@ -135,10 +198,10 @@
           <Choice value="Otra"/>
         </Choices>
         <View className="tip">
-          <Header value="💡 Consejo: Identifica la cocina principal del menú basándote en sus platos e ingredientes (ej. 'Pasta' → Italiana, 'Tacos' → Mexicana). Selecciona múltiples opciones si es una cocina de fusión, o 'Otra' si no está en la lista, es muy específica o desconocida." size="5"/>
+          <HyperText name="metadata_cuisine_tip_text" value="&lt;span style='font-size: 0.9em;'&gt;💡 Consejo: Identifica la cocina principal del menú basándote en sus platos e ingredientes (ej. 'Pasta' → Italiana, 'Tacos' → Mexicana).&amp;#10;&amp;#10;Selecciona múltiples opciones si es una cocina de fusión, o 'Otra' si no está en la lista, es muy específica o desconocida.&lt;/span&gt;"/>
         </View>
-        <Header value="Idioma del Menú" size="5" className="header-sub"/>
-        <Choices name="language" toName="text" choice="single" showInline="true" required="true">
+        <Header value="Idioma del Menú" className="header-sub"/>
+        <Choices name="language" toName="text" choice="single" showInline="true" required="true" className="choices-container">
           <Choice value="Español"/>
           <Choice value="Inglés"/>
           <Choice value="Portugués"/>
@@ -152,6 +215,6 @@
 
   <!-- Final Message -->
   <View className="success">
-    <Header value="✨ ¡Último paso! Revisa que todas las entidades tengan atributos correctos y consistentes. ¡Lo hiciste genial! ✨" size="4"/>
+    <Header value="✨ ¡Último paso! Revisa que todas las entidades tengan atributos correctos y consistentes. ¡Lo hiciste genial! ✨"/>
   </View>
 </View>
