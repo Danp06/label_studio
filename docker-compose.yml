@@ -54,6 +54,8 @@ services:
       sleep 30 &&
       echo 'Ejecutando script de creacion de proyectos...' &&
       python3 /scripts/create_project.py || echo 'Script de creacion completado' &&
+      echo 'Ejecutando script de creacion de usuarios...' &&
+      python3 /scripts/create_users.py || echo 'Script de creacion de usuarios completado' &&
       wait"
     restart: unless-stopped
     networks:
