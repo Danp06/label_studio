@@ -92,11 +92,16 @@ for project_id, project_info in projects_dict.items():
         print(f"⚠️ Proyecto '{project_id}' no tiene definida la clave 'data_source', no se importarán tasks.")
         continue
 
-    # CORRECCIÓN PRINCIPAL: Usar DATA_DIR en lugar de ruta relativa compleja
     data_file_path = os.path.join(DATA_DIR, data_source)
-    
+    print(f"ℹ️ Intentando cargar datos desde: {data_file_path}") # Añadido para depuración
+
     if not os.path.isfile(data_file_path):
         print(f"❌ No se encontró el archivo de datos: {data_file_path}")
+        continue
+
+    # Añadir una verificación explícita para archivos vacíos, que son una causa común de JSONDecodeError
+    if os.path.getsize(data_file_path) == 0:
+        print(f"❌ El archivo de datos está vacío o es inválido (0 bytes): {data_file_path}. No se pueden importar tasks.")
         continue
 
     try:
@@ -105,11 +110,12 @@ for project_id, project_info in projects_dict.items():
             tasks = json.load(f)
         
         if not isinstance(tasks, list):
-            print(f"❌ El archivo de datos debe contener una lista de tasks: {data_file_path}")
+            print(f"❌ El archivo de datos debe contener una lista de tasks (e.g., [...]): {data_file_path}")
             continue
 
         if not tasks:
-            print(f"⚠️ El archivo de datos está vacío: {data_file_path}")
+            # Mensaje corregido para indicar una lista vacía, no un archivo vacío
+            print(f"⚠️ El archivo de datos contiene una lista vacía de tasks: {data_file_path}")
             continue
 
         print(f"📦 Importando {len(tasks)} tasks al proyecto '{project_id}'...")
