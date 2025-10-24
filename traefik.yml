@@ -12,7 +12,6 @@ entryPoints:
 providers:
   docker:
     exposedByDefault: false
-    network: labelstudio-network
 
 certificatesResolvers:
   myresolver:
