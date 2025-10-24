@@ -9,9 +9,9 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - "./traefik.yml:/traefik.yml:ro"        # Archivo de configuración estática
-      - "./acme.json:/letsencrypt/acme.json"   # Certificados Let's Encrypt
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"  # Necesario para que Traefik vea los contenedores
+      - "./traefik.yml:/traefik.yml:ro"
+      - "./acme.json:/letsencrypt/acme.json"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
     networks:
       - labelstudio-network
     command:
@@ -29,6 +29,12 @@ services:
       LABEL_STUDIO_LOCAL_FILES_SERVING_ENABLED: "true"
       LABEL_STUDIO_LOCAL_FILES_DOCUMENT_ROOT: "/data"
       TZ: America/Bogota
+      # Configuración para proxy inverso (CRÍTICO para solucionar CSRF)
+      LABEL_STUDIO_HOST: ${LABEL_STUDIO_HOST}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS}
+      CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS}
+      # Configuración adicional para headers de proxy
+      SSRF_PROTECTION_ENABLED: "false"
     volumes:
       - label_studio_data:/label-studio/data
       - ./data:/data
@@ -58,6 +64,10 @@ services:
       - "traefik.http.routers.labelstudio.entrypoints=websecure"
       - "traefik.http.routers.labelstudio.tls.certresolver=myresolver"
       - "traefik.http.services.labelstudio.loadbalancer.server.port=8080"
+      # Middlewares para headers (importante para proxy)
+      - "traefik.http.routers.labelstudio.middlewares=labelstudio-headers"
+      - "traefik.http.middlewares.labelstudio-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.labelstudio-headers.headers.customrequestheaders.X-Forwarded-Host=labelstudio.lab.utb.edu.co"
 
   backup:
     image: heartexlabs/label-studio:latest
