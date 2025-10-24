@@ -53,7 +53,7 @@ services:
       echo 'Esperando que Label Studio este listo...' &&
       sleep 30 &&
       echo 'Ejecutando script de creacion de proyectos...' &&
-      python3 /scripts/create_project.py || echo 'Script de creacion completado' &&
+      python3 /scripts/create_project.py || echo 'Script de creacion de proyectos completado' &&
       echo 'Ejecutando script de creacion de usuarios...' &&
       python3 /scripts/create_users.py || echo 'Script de creacion de usuarios completado' &&
       wait"
@@ -62,14 +62,24 @@ services:
       - labelstudio-network
     labels:
       - "traefik.enable=true"
+      # Router HTTPS
       - "traefik.http.routers.labelstudio.rule=Host(`labelstudio.lab.utb.edu.co`)"
       - "traefik.http.routers.labelstudio.entrypoints=websecure"
+      - "traefik.http.routers.labelstudio.tls=true"
       - "traefik.http.routers.labelstudio.tls.certresolver=myresolver"
-      - "traefik.http.services.labelstudio.loadbalancer.server.port=8080"
-      # Middlewares para headers (importante para proxy)
       - "traefik.http.routers.labelstudio.middlewares=labelstudio-headers"
+      # Router HTTP (para redirección y desafío Let's Encrypt)
+      - "traefik.http.routers.labelstudio-http.rule=Host(`labelstudio.lab.utb.edu.co`)"
+      - "traefik.http.routers.labelstudio-http.entrypoints=web"
+      - "traefik.http.routers.labelstudio-http.middlewares=https-redirect"
+      # Middleware de redirección HTTP -> HTTPS
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+      # Middlewares para headers (importante para proxy)
       - "traefik.http.middlewares.labelstudio-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.middlewares.labelstudio-headers.headers.customrequestheaders.X-Forwarded-Host=labelstudio.lab.utb.edu.co"
+      # Servicio
+      - "traefik.http.services.labelstudio.loadbalancer.server.port=8080"
 
   backup:
     image: heartexlabs/label-studio:latest

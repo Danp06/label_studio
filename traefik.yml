@@ -1,12 +1,18 @@
 entryPoints:
   web:
     address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
   websecure:
     address: ":443"
 
 providers:
   docker:
     exposedByDefault: false
+    network: labelstudio-network
 
 certificatesResolvers:
   myresolver:
@@ -18,3 +24,8 @@ certificatesResolvers:
 
 log:
   level: INFO
+
+# Opcional: Dashboard de Traefik (comentado por seguridad)
+# api:
+#   dashboard: true
+#   insecure: true
