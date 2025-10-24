@@ -23,32 +23,28 @@ client = LabelStudio(base_url=LABEL_STUDIO_URL, api_key=LABEL_STUDIO_LEGACY_API_
 USERS_CONFIG = [
     {
         'email': os.getenv('TUTOR1_EMAIL'),
-        'password': os.getenv('TUTOR1_PASSWORD'),
         'first_name': os.getenv('TUTOR1_FIRST_NAME', ''),
         'last_name': os.getenv('TUTOR1_LAST_NAME', ''),
     },
     {
         'email': os.getenv('TUTOR2_EMAIL'),
-        'password': os.getenv('TUTOR2_PASSWORD'),
         'first_name': os.getenv('TUTOR2_FIRST_NAME', ''),
         'last_name': os.getenv('TUTOR2_LAST_NAME', ''),
     },
     {
         'email': os.getenv('TUTOR3_EMAIL'),
-        'password': os.getenv('TUTOR3_PASSWORD'),
         'first_name': os.getenv('TUTOR3_FIRST_NAME', ''),
         'last_name': os.getenv('TUTOR3_LAST_NAME', ''),
     },
     {
         'email': os.getenv('SOPORTE_EMAIL'),
-        'password': os.getenv('SOPORTE_PASSWORD'),
         'first_name': os.getenv('SOPORTE_FIRST_NAME', ''),
         'last_name': os.getenv('SOPORTE_LAST_NAME', ''),
     },
 ]
 
 # Filtrar usuarios válidos (que tengan email y password definidos en .env)
-users_to_create = [u for u in USERS_CONFIG if u.get('email') and u.get('password')]
+users_to_create = [u for u in USERS_CONFIG if u.get('email')]
 
 if not users_to_create:
     print("✗ No hay usuarios definidos en el archivo .env")
@@ -83,7 +79,6 @@ for user_data in users_to_create:
     try:
         new_user = client.users.create(
             email=email,
-            password=user_data.get('password'),
             first_name=user_data.get('first_name', ''),
             last_name=user_data.get('last_name', '')
         )
