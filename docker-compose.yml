@@ -1,6 +1,22 @@
 version: '3.8'
 
 services:
+  traefik:
+    image: traefik:v3.1
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "./traefik.yml:/traefik.yml:ro"        # Archivo de configuración estática
+      - "./acme.json:/letsencrypt/acme.json"   # Certificados Let's Encrypt
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"  # Necesario para que Traefik vea los contenedores
+    networks:
+      - labelstudio-network
+    command:
+      - "--configFile=/traefik.yml"
+
   labelstudio:
     image: heartexlabs/label-studio:latest
     container_name: label-studio
@@ -13,8 +29,6 @@ services:
       LABEL_STUDIO_LOCAL_FILES_SERVING_ENABLED: "true"
       LABEL_STUDIO_LOCAL_FILES_DOCUMENT_ROOT: "/data"
       TZ: America/Bogota
-    ports:
-      - "0.0.0.0:${LABEL_STUDIO_PORT}:8080"
     volumes:
       - label_studio_data:/label-studio/data
       - ./data:/data
@@ -38,6 +52,12 @@ services:
     restart: unless-stopped
     networks:
       - labelstudio-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.labelstudio.rule=Host(`labelstudio.lab.utb.edu.co`)"
+      - "traefik.http.routers.labelstudio.entrypoints=websecure"
+      - "traefik.http.routers.labelstudio.tls.certresolver=myresolver"
+      - "traefik.http.services.labelstudio.loadbalancer.server.port=8080"
 
   backup:
     image: heartexlabs/label-studio:latest
