@@ -191,14 +191,7 @@
       right: 20px;
       font-size: 1.5em;
     }
-    .collapse-panel {
-      background: var(--card-bg);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      margin: 20px auto;
-      max-width: 900px;
-      box-sizing: border-box;
-    }
+    /* Removed .collapse-panel style as Collapse is removed */
     .label-ingrediente {
       background: linear-gradient(135deg, #fff1f2, #ffe4e6) !important;
       border: 2px solid #fda4af !important;
@@ -339,7 +332,7 @@
     
     <Header value="Estado de Preparación" className="header-sub"/>
     <View className="explanation-box">
-      <HyperText name="preparation_state_tip_text" value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🥕 Estado de Preparación:&lt;/strong&gt;&lt;br/&gt;Clasifica la condición del ingrediente tal como aparece en el menú.&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Crudo:&lt;/strong&gt; Sin cocción o preparación térmica (ej. lechuga, tomate fresco).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Cocido:&lt;/strong&gt; Ha sido sometido a calor (ej. pollo cocido, patatas hervidas).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Procesado:&lt;/strong&gt; Ha pasado por un proceso industrial o de transformación (ej. queso rallado, embutidos, enlatados).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Mezclado:&lt;/strong&gt; Combinado con otros ingredientes para formar una preparación (ej. aderezo, salsa, masa).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Fresco:&lt;/strong&gt; Recién cosechado o sin alterar significativamente (ej. hierbas frescas, frutas).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Congelado:&lt;/strong&gt; Preservado por congelación (ej. guisantes congelados, mariscos congelados).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Seco:&lt;/strong&gt; Deshidratado (ej. especias, pasta seca, frutos secos).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;No Aplica:&lt;/strong&gt; Para ingredientes donde el estado no es relevante o no se especifica.&lt;/li&gt;&lt;/ul&gt;&lt;/span&gt;"/>
+      <HyperText name="preparation_state_tip_text" value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🥕 Estado de Preparación:&lt;/strong&gt;&lt;br/&gt;Clasifica la condición del ingrediente tal como aparece en el menú.&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Crudo:&lt;/strong&gt; Sin cocción o preparación térmica (ej. lechuga, tomate fresco).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Cocido:&lt;/strong&gt; Ha sido sometido a calor (ej. pollo cocido, patatas hervidas).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Procesado:&lt;/strong&gt; Ha pasado por un proceso industrial o de transformación (ej. queso rallado, embutidos, enlatados).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Mezclado:&lt;/strong&gt; Combinado con otros ingredientes para formar una preparación (ej. aderezo, salsa, masa).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Fresco:&lt;/strong&gt; Recién cosechado o sin alterar significativamente (ej. hierbas frescas, frutas).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Congelado:&lt;/strong&gt; Preservado por congelación (ej. guisantes congelados, mariscos congelados).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Seco:&lt;/strong&gt; Deshidratado (ej. especias, pasta seca, frutos secos).&lt;/li&gt;&lt;strong&gt;No Aplica:&lt;/strong&gt; Para ingredientes donde el estado no es relevante o no se especifica.&lt;/li&gt;&lt;/ul&gt;&lt;/span&gt;"/>
     </View>
     <Choices name="preparation_state" toName="text" perRegion="true" choice="single" showInline="true" className="choices-container">
       <Choice value="Crudo"/>
@@ -355,7 +348,7 @@
     <Header value="Método de Cocción" className="header-sub"/>
     <View className="explanation-box">
       <HyperText name="cooking_method_tip_text" 
-        value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🔥 Método de Cocción:&lt;/strong&gt;&lt;br/&gt;Describe la técnica culinaria principal utilizada para preparar el ingrediente. &lt;strong&gt;Puedes seleccionar múltiples opciones&lt;/strong&gt; si el ingrediente ha pasado por varias técnicas (ej. 'Pollo asado a la plancha' → Asado y A la Plancha).&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Asado:&lt;/strong&gt; Cocinado en horno o a fuego directo, sin líquido (ej. carne asada).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Frito:&lt;/strong&gt; Cocinado en aceite o grasa caliente (ej. patatas fritas, pescado frito).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Hervido:&lt;/strong&gt; Cocinado en agua u otro líquido a punto de ebullición (ej. verduras hervidas, pasta).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Crudo:&lt;/strong&gt; No ha sido cocinado (si es un método de &quot;cocción&quot; para un ingrediente que se consume así, como en un ceviche o ensalada).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Horneado:&lt;/strong&gt; Cocinado en un horno con calor seco (ej. pan, pollo al horno).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Al Vapor:&lt;/strong&gt; Cocinado con vapor de agua (ej. verduras al vapor, pescado al vapor).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Ahumado:&lt;/strong&gt; Expuesto al humo para sabor y conservación (ej. salmón ahumado, costillas ahumadas).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Tostado:&lt;/strong&gt; Cocinado con calor seco hasta dorar la superficie (ej. pan tostado, frutos secos tostados).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;A la Plancha:&lt;/strong&gt; Cocinado sobre una superficie caliente y plana con poco o ningún aceite (ej. carne a la plancha, verduras a la plancha).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Salteado:&lt;/strong&gt; Cocinado rápidamente en una pequeña cantidad de grasa a fuego alto (ej. vegetales salteados, gambas al ajillo).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;No Aplica:&lt;/strong&gt; Si el método de cocción no es relevante o no se especifica.&lt;/li&gt;&lt;/ul&gt;&lt;/span&gt;" />
+        value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🔥 Método de Cocción:&lt;/strong&gt;&lt;br/&gt;Describe la técnica culinaria principal utilizada para preparar el ingrediente. &lt;strong&gt;Puedes seleccionar múltiples opciones&lt;/strong&gt; si el ingrediente ha pasado por varias técnicas (ej. 'Pollo asado a la plancha' → Asado y A la Plancha).&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Asado:&lt;/strong&gt; Cocinado en horno o a fuego directo, sin líquido (ej. carne asada).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Frito:&lt;/strong&gt; Cocinado en aceite o grasa caliente (ej. patatas fritas, pescado frito).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Hervido:&lt;/strong&gt; Cocinado en agua u otro líquido a punto de ebullición (ej. verduras hervidas, pasta).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Crudo:&lt;/strong&gt; No ha sido cocinado (si es un método de &quot;cocción&quot; para un ingrediente que se consume así, como en un ceviche o ensalada).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Horneado:&lt;/strong&gt; Cocinado en un horno con calor seco (ej. pan, pollo al horno).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Al Vapor:&lt;/strong&gt; Cocinado con vapor de agua (ej. verduras al vapor, pescado al vapor).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Ahumado:&lt;/strong&gt; Expuesto al humo para sabor y conservación (ej. salmón ahumado, costillas ahumadas).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Tostado:&lt;/strong&gt; Cocinado con calor seco hasta dorar la superficie (ej. pan tostado, frutos secos tostados).&lt;/li&gt;&lt;strong&gt;A la Plancha:&lt;/strong&gt; Cocinado sobre una superficie caliente y plana con poco o ningún aceite (ej. carne a la plancha, verduras a la plancha).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Salteado:&lt;/strong&gt; Cocinado rápidamente en una pequeña cantidad de grasa a fuego alto (ej. vegetales salteados, gambas al ajillo).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;No Aplica:&lt;/strong&gt; Si el método de cocción no es relevante o no se especifica.&lt;/li&gt;&lt;/ul&gt;&lt;/span&gt;" />
     </View>
     <Choices name="cooking_method" toName="text" perRegion="true" choice="multiple" showInline="true" className="choices-container">
       <Choice value="Asado"/>
@@ -391,59 +384,56 @@
   <Header value="📊 Paso 3: Metadatos del Menú" className="header-step"/>
 
   <View className="instruction-box">
-    <HyperText name="step3_tip_text" value="&lt;span style='font-size: 1em; line-height: 1.6;'&gt;&lt;strong&gt;📊 ¡Atención!&lt;/strong&gt;&lt;br/&gt;En este paso, debes proporcionar información general sobre el menú completo.&lt;br/&gt;&lt;strong&gt;Haz clic en '🌍 Información General del Menú'&lt;/strong&gt; para desplegar las opciones y seleccionar la Cocina de Origen y el Idioma del Menú.&lt;/span&gt;"/>
+    <HyperText name="step3_tip_text" value="&lt;span style='font-size: 1em; line-height: 1.6;'&gt;&lt;strong&gt;📊 ¡Atención!&lt;/strong&gt;&lt;br/&gt;En este paso, debes proporcionar información general sobre el menú completo.&lt;br/&gt;Selecciona la Cocina de Origen y el Idioma del Menú.&lt;/span&gt;"/>
   </View>
 
-  <Collapse accordion="true" className="collapse-panel">
-    <Panel value="🌍 Información General del Menú">
-      <View style="padding: 25px;">
-        <Header value="Cocina de Origen" className="header-sub"/>
-        <View className="explanation-box">
-          <HyperText name="metadata_cuisine_tip_text" value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🌍 Cocina de Origen del Menú:&lt;/strong&gt;&lt;ul&gt;
-          &lt;li&gt;&lt;strong&gt;¿Qué tipo de platos predominan?&lt;/strong&gt; Observa los nombres y estilos de los platos, ingredientes y preparaciones para identificar la(s) cocina(s) principal(es). Ejemplo: abundancia de sushi, teriyaki o tempura sugiere &lt;strong&gt;Japonesa&lt;/strong&gt;; pasta, lasaña o risotto, &lt;strong&gt;Italiana&lt;/strong&gt;;&lt;/li&gt;
-          &lt;li&gt;&lt;strong&gt;Cocina Fusión:&lt;/strong&gt; Si el menú mezcla elementos de varias culturas culinarias (ej. 'sushi de quinoa', 'tacos de curry'), selecciona &lt;strong&gt;Fusión&lt;/strong&gt; además de las cocinas relevantes.&lt;/li&gt;
-          &lt;li&gt;&lt;strong&gt;Ingredientes y técnicas:&lt;/strong&gt; Fíjate en ingredientes clave (soya, aceituna, queso parmesano, maíz, papa, especias picantes) y formas de preparación para deducir la cocina.&lt;/li&gt;
-          &lt;li&gt;&lt;strong&gt;¿No aparece la cocina?&lt;/strong&gt; Si el menú es muy local, moderno o experimental y no encaja en ninguna, selecciona &lt;strong&gt;Otra&lt;/strong&gt; y documenta el caso.&lt;/li&gt;
-        &lt;/ul&gt;&lt;/span&gt;"/>
-        </View>
-        <Choices name="origin_cuisine" toName="text" choice="multiple" showInline="true" required="true" className="choices-container">
-          <Choice value="Italiana"/>
-          <Choice value="Peruana"/>
-          <Choice value="Japonesa"/>
-          <Choice value="Colombiana"/>
-          <Choice value="Mexicana"/>
-          <Choice value="Brasileña"/>
-          <Choice value="Argentina"/>
-          <Choice value="Española"/>
-          <Choice value="Asiática"/>
-          <Choice value="Mediterránea"/>
-          <Choice value="Americana"/>
-          <Choice value="Fusión"/>
-          <Choice value="Otra"/>
-        </Choices>
+  <!-- Content that was inside the Collapse/Panel, now directly visible -->
+  <View style="padding: 25px; background: var(--card-bg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); margin: 20px auto; max-width: 900px; box-sizing: border-box;">
+    <Header value="Cocina de Origen" className="header-sub"/>
+    <View className="explanation-box">
+      <HyperText name="metadata_cuisine_tip_text" value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🌍 Cocina de Origen del Menú:&lt;/strong&gt;&lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;¿Qué tipo de platos predominan?&lt;/strong&gt; Observa los nombres y estilos de los platos, ingredientes y preparaciones para identificar la(s) cocina(s) principal(es). Ejemplo: abundancia de sushi, teriyaki o tempura sugiere &lt;strong&gt;Japonesa&lt;/strong&gt;; pasta, lasaña o risotto, &lt;strong&gt;Italiana&lt;/strong&gt;;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Cocina Fusión:&lt;/strong&gt; Si el menú mezcla elementos de varias culturas culinarias (ej. 'sushi de quinoa', 'tacos de curry'), selecciona &lt;strong&gt;Fusión&lt;/strong&gt; además de las cocinas relevantes.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Ingredientes y técnicas:&lt;/strong&gt; Fíjate en ingredientes clave (soya, aceituna, queso parmesano, maíz, papa, especias picantes) y formas de preparación para deducir la cocina.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;¿No aparece la cocina?&lt;/strong&gt; Si el menú es muy local, moderno o experimental y no encaja en ninguna, selecciona &lt;strong&gt;Otra&lt;/strong&gt; y documenta el caso.&lt;/li&gt;
+    &lt;/ul&gt;&lt;/span&gt;"/>
+    </View>
+    <Choices name="origin_cuisine" toName="text" choice="multiple" showInline="true" required="true" className="choices-container">
+      <Choice value="Italiana"/>
+      <Choice value="Peruana"/>
+      <Choice value="Japonesa"/>
+      <Choice value="Colombiana"/>
+      <Choice value="Mexicana"/>
+      <Choice value="Brasileña"/>
+      <Choice value="Argentina"/>
+      <Choice value="Española"/>
+      <Choice value="Asiática"/>
+      <Choice value="Mediterránea"/>
+      <Choice value="Americana"/>
+      <Choice value="Fusión"/>
+      <Choice value="Otra"/>
+    </Choices>
 
-        <Header value="Idioma del Menú" className="header-sub"/>
-        <View className="explanation-box">
-          <HyperText name="language_tip_text" value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🗣️ Idioma del Menú:&lt;/strong&gt;&lt;ul&gt;
-          &lt;li&gt;Selecciona el &lt;strong&gt;idioma predominante&lt;/strong&gt; en el que está redactado el menú o la mayor parte de los nombres y descripciones de platos.&lt;/li&gt;
-          &lt;li&gt;Si el menú contiene términos de varios idiomas, selecciona el más representativo (ejemplo: 'Pasta alla Bolognese', 'Pollo a la Brasa' — selecciona &lt;strong&gt;Español&lt;/strong&gt; si la mayoría está en español, aunque haya palabras extranjeras típicas).&lt;/li&gt;
-          &lt;li&gt;Para menús bilingües (ej. columnas en inglés y español), selecciona &lt;strong&gt;Otro&lt;/strong&gt;.&lt;/li&gt;
-          &lt;li&gt;Recuerda: El idioma puede aportar contexto cultural importante sobre el restaurante y sus clientes.&lt;/li&gt;
-        &lt;/ul&gt;&lt;/span&gt;"/>
-        </View>
-        <Choices name="language" toName="text" choice="single" showInline="true" required="true" className="choices-container">
-          <Choice value="Español"/>
-          <Choice value="Inglés"/>
-          <Choice value="Portugués"/>
-          <Choice value="Francés"/>
-          <Choice value="Italiano"/>
-          <Choice value="Japonés"/>
-          <Choice value="Chino"/>
-          <Choice value="Otro"/>
-        </Choices>
-      </View>
-    </Panel>
-  </Collapse>
+    <Header value="Idioma del Menú" className="header-sub"/>
+    <View className="explanation-box">
+      <HyperText name="language_tip_text" value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🗣️ Idioma del Menú:&lt;/strong&gt;&lt;ul&gt;
+      &lt;li&gt;Selecciona el &lt;strong&gt;idioma predominante&lt;/strong&gt; en el que está redactado el menú o la mayor parte de los nombres y descripciones de platos.&lt;/li&gt;
+      &lt;li&gt;Si el menú contiene términos de varios idiomas, selecciona el más representativo (ejemplo: 'Pasta alla Bolognese', 'Pollo a la Brasa' — selecciona &lt;strong&gt;Español&lt;/strong&gt; si la mayoría está en español, aunque haya palabras extranjeras típicas).&lt;/li&gt;
+      &lt;li&gt;Para menús bilingües (ej. columnas en inglés y español), selecciona &lt;strong&gt;Otro&lt;/strong&gt;.&lt;/li&gt;
+      &lt;li&gt;Recuerda: El idioma puede aportar contexto cultural importante sobre el restaurante y sus clientes.&lt;/li&gt;
+    &lt;/ul&gt;&lt;/span&gt;"/>
+    </View>
+    <Choices name="language" toName="text" choice="single" showInline="true" required="true" className="choices-container">
+      <Choice value="Español"/>
+      <Choice value="Inglés"/>
+      <Choice value="Portugués"/>
+      <Choice value="Francés"/>
+      <Choice value="Italiano"/>
+      <Choice value="Japonés"/>
+      <Choice value="Chino"/>
+      <Choice value="Otro"/>
+    </Choices>
+  </View>
 
   <!-- ===== FINAL SUCCESS MESSAGE ===== -->
   <View className="success">

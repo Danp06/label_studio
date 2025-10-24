@@ -191,14 +191,6 @@
       right: 20px;
       font-size: 1.5em;
     }
-    .collapse-panel {
-      background: var(--card-bg);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      margin: 20px auto;
-      max-width: 900px;
-      box-sizing: border-box;
-    }
     .label-ingrediente {
       background: linear-gradient(135deg, #fff1f2, #ffe4e6) !important;
       border: 2px solid #fda4af !important;
