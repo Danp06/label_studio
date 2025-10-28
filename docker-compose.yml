@@ -56,8 +56,8 @@ services:
       sleep 30 &&
       echo 'Ejecutando script de creacion de proyectos...' &&
       python3 /scripts/create_project.py || echo 'Script de creacion de proyectos completado' &&
-      echo 'Ejecutando script de creacion de usuarios...' &&
-      python3 /scripts/create_users.py || echo 'Script de creacion de usuarios completado' &&
+      # echo 'Ejecutando script de creacion de usuarios...'
+      # python3 /scripts/create_users.py || echo 'Script de creacion de usuarios completado'
       echo 'Ejecutando monitoreo inicial...' &&
       /scripts/monitor_performance.sh &&
       wait"
