@@ -41,11 +41,13 @@ services:
       - ./exports:/exports
       - ./scripts:/scripts
       - ./projects:/projects
+      - ./monitoring:/monitoring
       - ./.env:/.env
     command: |
-      sh -c "apt-get update && apt-get install -y cron &&
+      sh -c "apt-get update && apt-get install -y cron curl bc net-tools procps &&
       pip install python-dotenv requests &&
       echo '0 6,14,22 * * * /scripts/export_annotations.sh' > /tmp/crontab_labelstudio &&
+      echo '0 * * * * /scripts/monitor_performance.sh >> /monitoring/cron.log 2>&1' >> /tmp/crontab_labelstudio &&
       crontab /tmp/crontab_labelstudio &&
       service cron start &&
       echo 'Iniciando Label Studio...' &&
@@ -56,6 +58,8 @@ services:
       python3 /scripts/create_project.py || echo 'Script de creacion de proyectos completado' &&
       echo 'Ejecutando script de creacion de usuarios...' &&
       python3 /scripts/create_users.py || echo 'Script de creacion de usuarios completado' &&
+      echo 'Ejecutando monitoreo inicial...' &&
+      /scripts/monitor_performance.sh &&
       wait"
     restart: unless-stopped
     networks:
@@ -102,6 +106,26 @@ services:
       crontab /tmp/crontab_backup &&
       service cron start &&
       tail -f /dev/null"
+
+  # Contenedor de monitoreo (no interfiere con Label Studio)
+  monitor:
+    image: alpine:latest
+    container_name: label-studio-monitor
+    restart: unless-stopped
+    environment:
+      - TZ=America/Bogota
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./monitoring:/monitoring
+      - ./scripts:/scripts:ro
+    networks:
+      - labelstudio-network
+    command: |
+      sh -c "apk add --no-cache docker-cli curl bc tzdata &&
+      ln -sf /usr/share/zoneinfo/America/Bogota /etc/localtime &&
+      echo 'America/Bogota' > /etc/timezone &&
+      echo '0 * * * * /scripts/monitor_docker.sh >> /monitoring/monitor_cron.log 2>&1' > /tmp/crontab_monitor &&
+      crond -f -l 2 -L /monitoring/crond.log"
 
 volumes:
   label_studio_data:
