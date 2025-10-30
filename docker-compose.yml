@@ -17,6 +17,26 @@ services:
     command:
       - "--configFile=/traefik.yml"
 
+  postgres:
+    image: postgres:15-alpine
+    container_name: labelstudio-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRE_NAME}
+      POSTGRES_USER: ${POSTGRE_USER}
+      POSTGRES_PASSWORD: ${POSTGRE_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups/postgres:/backups
+    networks:
+      - labelstudio-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRE_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   labelstudio:
     image: heartexlabs/label-studio:latest
     container_name: label-studio
@@ -35,6 +55,13 @@ services:
       CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS}
       # Configuración adicional para headers de proxy
       SSRF_PROTECTION_ENABLED: "false"
+      # Configuración de PostgreSQL
+      DJANGO_DB: default
+      POSTGRE_NAME: ${POSTGRE_NAME}
+      POSTGRE_USER: ${POSTGRE_USER}
+      POSTGRE_PASSWORD: ${POSTGRE_PASSWORD}
+      POSTGRE_PORT: ${POSTGRE_PORT}
+      POSTGRE_HOST: postgres
     volumes:
       - label_studio_data:/label-studio/data
       - ./data:/data
@@ -44,26 +71,35 @@ services:
       - ./monitoring:/monitoring
       - ./.env:/.env
     command: |
-      sh -c "apt-get update && apt-get install -y cron curl bc net-tools procps &&
-      pip install python-dotenv requests &&
+      sh -c "apt-get update && apt-get install -y cron curl bc net-tools procps postgresql-client &&
+      pip install python-dotenv requests psycopg2-binary &&
       echo '0 6,14,22 * * * /scripts/export_annotations.sh' > /tmp/crontab_labelstudio &&
       echo '0 * * * * /scripts/monitor_performance.sh >> /monitoring/cron.log 2>&1' >> /tmp/crontab_labelstudio &&
       crontab /tmp/crontab_labelstudio &&
       service cron start &&
-      echo 'Iniciando Label Studio...' &&
+      echo 'Esperando a que PostgreSQL este listo...' &&
+      until pg_isready -h postgres -U ${POSTGRE_USER}; do
+        echo 'PostgreSQL no esta disponible - esperando...'
+        sleep 2
+      done &&
+      echo 'PostgreSQL esta listo!' &&
+      echo 'Iniciando Label Studio con PostgreSQL...' &&
       label-studio start &
       echo 'Esperando que Label Studio este listo...' &&
       sleep 30 &&
       echo 'Ejecutando script de creacion de proyectos...' &&
       python3 /scripts/create_project.py || echo 'Script de creacion de proyectos completado' &&
-      # echo 'Ejecutando script de creacion de usuarios...'
-      # python3 /scripts/create_users.py || echo 'Script de creacion de usuarios completado'
+      # echo 'Ejecutando script de creacion de usuarios...' &&
+      # python3 /scripts/create_users.py || echo 'Script de creacion de usuarios completado' &&
       echo 'Ejecutando monitoreo inicial...' &&
       /scripts/monitor_performance.sh &&
       wait"
     restart: unless-stopped
     networks:
       - labelstudio-network
+    depends_on:
+      postgres:
+        condition: service_healthy
     labels:
       - "traefik.enable=true"
       # Router HTTPS
@@ -91,6 +127,10 @@ services:
     user: root
     environment:
       - TZ=America/Bogota
+      - POSTGRE_NAME=${POSTGRE_NAME}
+      - POSTGRE_USER=${POSTGRE_USER}
+      - POSTGRE_PASSWORD=${POSTGRE_PASSWORD}
+      - POSTGRE_HOST=postgres
     volumes:
       - label_studio_data:/data
       - ./backups:/backups
@@ -99,8 +139,10 @@ services:
     restart: unless-stopped
     networks:
       - labelstudio-network
+    depends_on:
+      - postgres
     command: |
-      sh -c "apt-get update && apt-get install -y cron &&
+      sh -c "apt-get update && apt-get install -y cron postgresql-client &&
       pip install python-dotenv requests &&
       echo '0 6,14,22 * * * /backup.sh' > /tmp/crontab_backup &&
       crontab /tmp/crontab_backup &&
@@ -129,6 +171,8 @@ services:
 
 volumes:
   label_studio_data:
+    driver: local
+  postgres_data:
     driver: local
 
 networks:
