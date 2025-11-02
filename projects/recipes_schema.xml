@@ -240,6 +240,7 @@
 
     <Labels name="entities" toName="text" smart="true" showInline="true">
       <Label value="INGREDIENTE" background="#FFB6B6" className="label-ingrediente"/>
+      <Label value="MARCA" background="#FFE0B2" className="label-marca"/>
     </Labels>
   </View>
 
@@ -297,7 +298,7 @@
           &lt;li&gt;&lt;strong&gt;No estás seguro:&lt;/strong&gt; Si no puedes identificar claramente el origen, selecciona &lt;strong&gt;Otra&lt;/strong&gt;.&lt;/li&gt;
         &lt;/ul&gt;&lt;/span&gt;"/>
     </View>
-    <Choices name="origin_cuisine" toName="text" perRegion="true" choice="multiple" showInline="true" required="true" className="choices-container">
+    <Choices name="origin_cuisine" toName="text" perRegion="true" choice="multiple" showInline="true" className="choices-container">
       <Choice value="Italiana"/>
       <Choice value="Peruana"/>
       <Choice value="Japonesa"/>
@@ -322,7 +323,7 @@
           &lt;li&gt;Recuerda: El idioma puede ayudar a entender el contexto cultural y las variaciones regionales del ingrediente.&lt;/li&gt;
         &lt;/ul&gt;&lt;/span&gt;"/>
     </View>
-    <Choices name="ingredient_language" toName="text" perRegion="true" choice="single" showInline="true" required="true" className="choices-container">
+    <Choices name="ingredient_language" toName="text" perRegion="true" choice="single" showInline="true" className="choices-container">
       <Choice value="Español"/>
       <Choice value="Inglés"/>
       <Choice value="Portugués"/>
@@ -331,6 +332,21 @@
       <Choice value="Japonés"/>
       <Choice value="Chino"/>
       <Choice value="Otro"/>
+    </Choices>
+  </View>
+
+  <!-- MARCA Attributes -->
+  <View visibleWhen="region-selected" whenTagName="entities" whenLabelValue="MARCA" className="attributes-box">
+    <Header value="🏷️ Atributos para MARCA" className="header-sub"/>
+
+    <Header value="Tipo de Marca" className="header-sub"/>
+    <View className="explanation-box">
+      <HyperText name="marca_type_tip_text" value="&lt;span style='font-size: 1em;'&gt;&lt;strong&gt;🏷️ Clasificación de Marcas:&lt;/strong&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Marca de Comida:&lt;/strong&gt; Identifica marcas de productos alimenticios sólidos o preparados. Ej: Nestlé, Kellogg's, productos alimenticios envasados.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Marca de Bebida:&lt;/strong&gt; Se refiere a marcas de líquidos destinados al consumo. Ej: Coca-Cola, Pepsi, marcas de bebidas embotelladas.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Marca de Producto:&lt;/strong&gt; Para marcas de ingredientes, aditivos o complementos que no son comida ni bebida principal. Ej: Aceites, salsas, condimentos, especias.&lt;/li&gt;&lt;/ul&gt;&lt;/span&gt;"/>
+    </View>
+    <Choices name="brand_type" toName="text" perRegion="true" choice="single" showInline="true" className="choices-container">
+      <Choice value="Marca de Comida"/>
+      <Choice value="Marca de Bebida"/>
+      <Choice value="Marca de Producto"/>
     </Choices>
   </View>
 
