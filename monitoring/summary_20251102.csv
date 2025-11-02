@@ -1,0 +1,2 @@
+timestamp,connections,response_ms,db_size_mb,memory_used_pct
+2025-11-02_00:00:01,1,27,0,33
