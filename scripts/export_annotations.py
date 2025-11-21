@@ -2,7 +2,8 @@
 
 import os
 import sys
-from datetime import datetime
+import time
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from label_studio_sdk import LabelStudio
 import subprocess
@@ -29,6 +30,29 @@ def get_api_key():
         print("  LABEL_STUDIO_LEGACY_API_KEY=tu_legacy_token")
         print("  LABEL_STUDIO_PERSONAL_API_KEY=tu_personal_token")
         return None, None
+
+def clean_old_exports(export_dir, days=3):
+    """
+    Elimina archivos en export_dir que tengan más de 'days' días.
+    """
+    now = time.time()
+    cutoff = now - days * 86400  # 86400 segundos por día
+    deleted_files = []
+    if os.path.exists(export_dir):
+        for filename in os.listdir(export_dir):
+            file_path = os.path.join(export_dir, filename)
+            if os.path.isfile(file_path):
+                try:
+                    file_mtime = os.path.getmtime(file_path)
+                    if file_mtime < cutoff:
+                        os.remove(file_path)
+                        deleted_files.append(filename)
+                except Exception as e:
+                    print(f"   ⚠️  No se pudo borrar '{filename}': {e}")
+    if deleted_files:
+        print(f"🧹 {len(deleted_files)} archivos viejos eliminados de {export_dir} (>{days} días).")
+    else:
+        print(f"🧹 No se encontraron archivos viejos para borrar en {export_dir}.")
 
 api_key, token_type = get_api_key()
 if not api_key:
@@ -72,6 +96,8 @@ def export_all_projects(export_format="JSON"):
 
         print(f"📋 Encontrados {len(projects)} proyectos\n")
         os.makedirs(EXPORT_DIR, exist_ok=True)
+        # Limpiar archivos viejos antes de exportar
+        clean_old_exports(EXPORT_DIR, days=2)
         success_count = 0
 
         for project in projects:

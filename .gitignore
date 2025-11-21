@@ -211,5 +211,5 @@ data/raw/*
 data/process/*
 !data/process/*.json
 backups/*
-export/*
+exports/*
 monitoring/*
